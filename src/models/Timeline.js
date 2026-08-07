@@ -10,4 +10,4 @@ const timelineSchema = new mongoose.Schema(
   { timestamps: true }, // 自动添加 createdAt 和 updatedAt 字段
 );
 
-module.exports = mongoose.model("Timeline", timelineSchema, 'timeline');
+module.exports = mongoose.model("Timeline", timelineSchema, "timeline");

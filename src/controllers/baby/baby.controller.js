@@ -7,7 +7,10 @@ exports.getBabyInfo = async (req, res, next) => {
   try {
     let baby = await Baby.findOne();
     if (!baby) {
-      baby = await Baby.create({ name: "宝宝", birthday: new Date().toISOString().slice(0, 10) });
+      baby = await Baby.create({
+        name: "宝宝",
+        birthday: new Date().toISOString().slice(0, 10),
+      });
     }
     res.json(Response.success(baby));
   } catch (err) {

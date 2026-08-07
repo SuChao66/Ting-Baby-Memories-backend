@@ -2,7 +2,7 @@
 const notFoundMiddleware = require("../middlewares/notFound.middleware");
 const errorMiddleware = require("../middlewares/error.middleware");
 
-// 注册自定义中间件 
+// 注册自定义中间件
 const registerCustomMiddleware = (app) => {
   // 404中间件
   app.use(notFoundMiddleware);
