@@ -1,4 +1,7 @@
 const Timeline = require("../../models/Timeline");
+// 引入 code 值
+const { RESPONSE_CODE } = require("../../enums");
+// 引入工具函数
 const { Response, ApiError, catchAsync } = require("../../utils");
 
 // 获取时间线列表
@@ -19,7 +22,7 @@ exports.deleteTimelineItem = catchAsync(async (req, res) => {
   const { id } = req.params;
   const item = await Timeline.findByIdAndDelete(id);
   if (!item) {
-    throw new ApiError("时间线项不存在", 404);
+    throw new ApiError("时间线项不存在", RESPONSE_CODE.NOT_FOUND);
   }
   res.json(Response.success(null));
 });

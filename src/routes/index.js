@@ -8,7 +8,7 @@ const timelineRouter = require("./modules/timeline");
 const router = express.Router();
 
 // 注册路由
-router.get("/v1/baby", babyRouter);
-router.get("/v1/timeline", timelineRouter);
+router.use("/v1/baby", babyRouter);
+router.use("/v1/timeline", timelineRouter);
 
 module.exports = router;
