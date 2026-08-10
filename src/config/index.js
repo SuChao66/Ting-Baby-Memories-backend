@@ -26,7 +26,6 @@ module.exports = {
   env,
   ...rateLimitConfig,
   ...jwt,
-  CODE: 429, // 429 状态码
   MESSAGE: "请求过于频繁，请稍后再试", // 错误消息
   port: process.env.PORT || 3000,
   mongoUri:
