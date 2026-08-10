@@ -16,9 +16,16 @@ const rateLimitConfig =
         MAX: 1000, // 开发环境: 每个 IP 最多 1000 次请求
       };
 
+// JWT 配置
+const jwt = {
+  jwtSecret: process.env.JWT_SECRET || "ting-baby-memories", // JWT 密钥
+  expiresIn: process.env.JWT_EXPIRES_IN || "7d", // JWT 过期时间
+};
+
 module.exports = {
   env,
   ...rateLimitConfig,
+  ...jwt,
   CODE: 429, // 429 状态码
   MESSAGE: "请求过于频繁，请稍后再试", // 错误消息
   port: process.env.PORT || 3000,

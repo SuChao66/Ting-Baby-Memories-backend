@@ -1,4 +1,4 @@
-const Response = require("../utils/response");
+const Response = require("../utils").Response;
 
 // 404 处理
 function notFoundMiddleware(req, res) {

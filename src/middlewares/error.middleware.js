@@ -1,4 +1,4 @@
-const Response = require("../utils/response");
+const Response = require("../utils").Response;
 
 // 全局错误处理
 function errorMiddleware(err, req, res, next) {
