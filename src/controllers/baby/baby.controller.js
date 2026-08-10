@@ -1,6 +1,6 @@
 const Baby = require("../../models/Baby");
 // 引入响应工具模块
-const Response = require("../../utils/response");
+const Response = require("../../utils").Response;
 
 // 获取宝宝信息（单条记录）
 exports.getBabyInfo = async (req, res, next) => {

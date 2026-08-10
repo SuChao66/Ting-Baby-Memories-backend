@@ -1,5 +1,5 @@
 const Timeline = require("../../models/Timeline");
-const Response = require("../../utils/response");
+const Response = require("../../utils").Response;
 
 // 获取时间线列表
 exports.getTimelineList = async (req, res, next) => {
