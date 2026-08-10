@@ -1,14 +1,17 @@
 // 引入第三方中间件模块
 const registerThirdPartyMiddleware = require("./register.third.middleware");
-// 引入自定义中间件模块
-const registerCustomMiddleware = require("./register.custom.middleware");
+const notFoundMiddleware = require("../middlewares/notFound.middleware");
+const errorMiddleware = require("../middlewares/error.middleware");
 
-// 注册中间件
-const registerAllMiddleware = (app) => {
-  // 注册第三方中间件
+// 注册前置中间件（路由之前）
+const registerPreMiddleware = (app) => {
   registerThirdPartyMiddleware(app);
-  // 注册自定义中间件
-  registerCustomMiddleware(app);
 };
 
-module.exports = registerAllMiddleware;
+// 注册后置中间件（路由之后：404 + 错误处理必须在所有路由之后）
+const registerPostMiddleware = (app) => {
+  app.use(notFoundMiddleware);
+  app.use(errorMiddleware);
+};
+
+module.exports = { registerPreMiddleware, registerPostMiddleware };
