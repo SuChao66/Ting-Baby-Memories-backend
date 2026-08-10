@@ -4,6 +4,7 @@ const { RESPONSE_CODE } = require("../enums");
 // 全局错误处理
 function errorMiddleware(err, req, res, next) {
   logger.error(err.message, {
+    requestId: req.id,
     stack: err.stack,
     path: req.path,
     method: req.method,
