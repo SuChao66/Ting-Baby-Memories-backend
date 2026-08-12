@@ -1,17 +1,13 @@
 // 引入中间件模块
-// 跨域中间件
-const cors = require("cors");
-// 日志中间件
-const morgan = require("morgan");
-// 安全中间件
-const helmet = require("helmet");
-// 速率限制中间件
-const rateLimitMiddleware = require("../middlewares/rateLimit.middleware");
-// 引入配置模块
-const config = require("../config/index");
+import cors from "cors";
+import morgan from "morgan";
+import helmet from "helmet";
+import rateLimitMiddleware from "@/middlewares/rateLimit.middleware";
+import config from "@/config";
+import type { Express } from "express";
 
 // 注册第三方中间件
-const registerThirdPartyMiddleware = (app) => {
+const registerThirdPartyMiddleware = (app: Express) => {
   // 跨域中间件
   app.use(
     cors({
@@ -29,4 +25,4 @@ const registerThirdPartyMiddleware = (app) => {
   }
 };
 
-module.exports = registerThirdPartyMiddleware;
+export default registerThirdPartyMiddleware;

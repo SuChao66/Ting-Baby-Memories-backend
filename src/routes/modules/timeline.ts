@@ -1,7 +1,7 @@
 // 引入 express 模块
-const express = require("express");
+import express from "express";
 // 引入控制器模块
-const timelineController = require("../../controllers/timeline/timeline.controller");
+import * as timelineController from "@/controllers/timeline/timeline.controller";
 
 // 创建路由实例
 const router = express.Router();
@@ -95,4 +95,4 @@ router.post("/add", timelineController.addTimelineItem);
  */
 router.delete("/delete/:id", timelineController.deleteTimelineItem);
 
-module.exports = router;
+export default router;

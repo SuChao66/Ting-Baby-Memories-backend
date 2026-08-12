@@ -1,5 +1,5 @@
 // 统一管理 code 值，避免分散硬编码。
-const RESPONSE_CODE = {
+export const RESPONSE_CODE = {
   SUCCESS: 0,
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
@@ -7,6 +7,6 @@ const RESPONSE_CODE = {
   NOT_FOUND: 404,
   RATE_LIMIT: 429,
   SERVER_ERROR: 500,
-};
+} as const;
 
-module.exports = RESPONSE_CODE;
+export type ResponseCode = (typeof RESPONSE_CODE)[keyof typeof RESPONSE_CODE];

@@ -1,5 +1,7 @@
 // 环境配置加载
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // 当前环境
 const env = process.env.NODE_ENV || "development";
@@ -22,13 +24,15 @@ const jwt = {
   expiresIn: process.env.JWT_EXPIRES_IN || "7d", // JWT 过期时间
 };
 
-module.exports = {
+const config = {
   env,
   ...rateLimitConfig,
   ...jwt,
   MESSAGE: "请求过于频繁，请稍后再试", // 错误消息
-  port: process.env.PORT || 3000,
+  port: Number(process.env.PORT) || 3000,
   mongoUri:
     process.env.MONGO_URI || "mongodb://localhost:27017/ting-baby-memories",
   corsOrigins: process.env.CORS_ORIGINS || "http://localhost:5173",
 };
+
+export default config;

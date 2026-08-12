@@ -1,9 +1,14 @@
 // ESLint 配置
 const js = require("@eslint/js");
+const tseslint = require("typescript-eslint");
 const prettier = require("eslint-config-prettier");
 
-module.exports = [
+module.exports = tseslint.config(
+  {
+    ignores: ["node_modules/", "logs/", "uploads/", "dist/"],
+  },
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   prettier,
   {
     languageOptions: {
@@ -25,10 +30,19 @@ module.exports = [
       },
     },
     rules: {
-      "no-unused-vars": ["warn", { argsIgnorePattern: "next" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "next" },
+      ],
       "no-console": "off",
       "prefer-const": "error",
     },
-    ignores: ["node_modules/", "logs/", "uploads/"],
   },
-];
+  {
+    // 配置文件本身为 CommonJS，允许 require
+    files: ["eslint.config.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
+);

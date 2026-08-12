@@ -1,8 +1,8 @@
 // 引入 express 模块
-const express = require("express");
+import express from "express";
 // 引入路由模块
-const babyRouter = require("./modules/baby");
-const timelineRouter = require("./modules/timeline");
+import babyRouter from "@/routes/modules/baby";
+import timelineRouter from "@/routes/modules/timeline";
 
 // 创建路由实例
 const router = express.Router();
@@ -11,4 +11,4 @@ const router = express.Router();
 router.use("/v1/baby", babyRouter);
 router.use("/v1/timeline", timelineRouter);
 
-module.exports = router;
+export default router;
