@@ -4,9 +4,9 @@
   "description": "ting baby memories server",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node dist/server.js --env production",
-    "dev": "tsx watch src/server.ts --env development",
-    "prod": "node dist/server.js --env production",
+    "start": "NODE_ENV=production node dist/server.js",
+    "dev": "NODE_ENV=development tsx watch src/server.ts",
+    "prod": "NODE_ENV=production node dist/server.js",
     "build": "tsc && tsc-alias",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,json}\"",
