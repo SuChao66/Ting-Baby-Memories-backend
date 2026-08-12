@@ -11,7 +11,7 @@ import { logger } from "@/utils";
 mongoose
   .connect(config.mongoUri)
   .then(() => {
-    logger.info("[MongoDB] 连接成功");
+    logger.info(`[MongoDB] 连接成功`);
     // 启动服务
     app.listen(config.port, () => {
       logger.info(`[Server] 服务已启动，端口: ${config.port} (${config.env})`);

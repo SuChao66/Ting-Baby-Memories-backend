@@ -1,10 +1,11 @@
 // 环境配置加载
 import dotenv from "dotenv";
 
-dotenv.config();
-
 // 当前环境
 const env = process.env.NODE_ENV || "development";
+
+// 按环境加载对应的 .env 文件
+dotenv.config({ path: `.env.${env}` });
 
 // 速率限制配置（区分环境）
 const rateLimitConfig =
