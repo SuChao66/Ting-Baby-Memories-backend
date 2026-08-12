@@ -6,7 +6,7 @@ const morgan = require("morgan");
 // 安全中间件
 const helmet = require("helmet");
 // 速率限制中间件
-const rateLimitMiddleware = require("./rateLimit.middleware");
+const rateLimitMiddleware = require("../middlewares/rateLimit.middleware");
 // 引入配置模块
 const config = require("../config/index");
 

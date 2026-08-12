@@ -10,7 +10,7 @@ const limiter = rateLimit({
   windowMs: config.WINDOW_MS, // 15 分钟窗口
   max: config.MAX, // 每个 IP 最多 100 次请求
   message: {
-    code: RESPONSE_CODE.RATE_LIMIT_ERROR,
+    code: RESPONSE_CODE.RATE_LIMIT,
     message: config.MESSAGE,
     data: null,
   },
