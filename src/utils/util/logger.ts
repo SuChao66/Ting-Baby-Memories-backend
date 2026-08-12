@@ -2,10 +2,10 @@
 // 日志分级：info, debug, error, warn
 // 控制台输出：info, debug
 // 按天切割文件落盘：app-%DATE%.log, error-%DATE%.log
-const { createLogger, format, transports } = require("winston");
-const DailyRotateFile = require("winston-daily-rotate-file");
-const path = require("path");
-const config = require("../../config");
+import { createLogger, format, transports } from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
+import path from "path";
+import config from "@/config";
 
 // 日志记录器
 const logger = createLogger({
@@ -35,4 +35,4 @@ const logger = createLogger({
   ],
 });
 
-module.exports = logger;
+export default logger;

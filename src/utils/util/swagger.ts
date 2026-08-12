@@ -1,7 +1,7 @@
 // Swagger 接口文档配置
-const swaggerJsdoc = require("swagger-jsdoc");
+import swaggerJsdoc from "swagger-jsdoc";
 
-const options = {
+const options: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
     info: {
@@ -54,7 +54,7 @@ const options = {
     },
   },
   // 扫描路由文件中的 OpenAPI 注释
-  apis: ["src/routes/modules/*.js"],
+  apis: ["src/routes/modules/*.ts"],
 };
 
-module.exports = swaggerJsdoc(options);
+export default swaggerJsdoc(options);

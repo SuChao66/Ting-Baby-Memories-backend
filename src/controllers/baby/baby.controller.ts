@@ -1,9 +1,9 @@
-const Baby = require("../../models/Baby");
+import Baby from "@/models/Baby";
 // 引入响应工具模块
-const { Response, catchAsync } = require("../../utils");
+import { Response, catchAsync } from "@/utils";
 
 // 获取宝宝信息（单条记录）
-exports.getBabyInfo = catchAsync(async (req, res) => {
+export const getBabyInfo = catchAsync(async (req, res) => {
   let baby = await Baby.findOne();
   if (!baby) {
     baby = await Baby.create({
@@ -15,7 +15,7 @@ exports.getBabyInfo = catchAsync(async (req, res) => {
 });
 
 // 更新宝宝信息
-exports.updateBabyInfo = catchAsync(async (req, res) => {
+export const updateBabyInfo = catchAsync(async (req, res) => {
   const { name, birthday, avatar } = req.body;
   let baby = await Baby.findOne();
   if (!baby) {

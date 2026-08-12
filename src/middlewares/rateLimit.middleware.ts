@@ -1,9 +1,7 @@
 // 速率限制中间件
-const rateLimit = require("express-rate-limit");
-// 引入配置模块
-const config = require("../config/index");
-// 导入常量
-const { RESPONSE_CODE } = require("../enums");
+import rateLimit from "express-rate-limit";
+import config from "@/config";
+import { RESPONSE_CODE } from "@/enums";
 
 // 速率限制中间件
 const limiter = rateLimit({
@@ -16,4 +14,4 @@ const limiter = rateLimit({
   },
 });
 
-module.exports = limiter;
+export default limiter;

@@ -1,7 +1,7 @@
 // 引入 express 模块
-const express = require("express");
+import express from "express";
 // 引入控制器模块
-const babyController = require("../../controllers/baby/baby.controller");
+import * as babyController from "@/controllers/baby/baby.controller";
 
 // 创建路由实例
 const router = express.Router();
@@ -59,4 +59,4 @@ router.get("/info", babyController.getBabyInfo);
  */
 router.put("/update", babyController.updateBabyInfo);
 
-module.exports = router;
+export default router;

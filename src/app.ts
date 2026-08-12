@@ -1,15 +1,12 @@
 // 引入 express 模块
-const express = require("express");
+import express from "express";
 // 引入 swagger 相关模块
-const swaggerUi = require("swagger-ui-express");
-const { swagger } = require("./utils");
+import swaggerUi from "swagger-ui-express";
+import { swagger } from "@/utils";
 // 引入注册中间件模块
-const {
-  registerPreMiddleware,
-  registerPostMiddleware,
-} = require("./global/index");
+import { registerPreMiddleware, registerPostMiddleware } from "@/global/index";
 // 引入路由模块
-const routes = require("./routes");
+import routes from "@/routes";
 
 // 创建 express 应用实例
 const app = express();
@@ -30,4 +27,4 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 // 注册后置中间件（404 + 错误处理，必须在路由之后）
 registerPostMiddleware(app);
 
-module.exports = app;
+export default app;
