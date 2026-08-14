@@ -1,5 +1,7 @@
 // 引入 express 模块
 import express from "express";
+// 引入 cookie-parser
+import cookieParser from "cookie-parser";
 // 引入 swagger 相关模块
 import swaggerUi from "swagger-ui-express";
 import { swagger } from "@/utils";
@@ -13,6 +15,8 @@ const app = express();
 
 // 注册前置中间件（cors/helmet/rateLimit/morgan）
 registerPreMiddleware(app);
+// 解析 cookie
+app.use(cookieParser());
 // parse requests with a Content-Type of application/json
 app.use(express.json());
 // parse requests with a Content-Type of application/x-www-form-urlencoded

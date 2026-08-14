@@ -4,7 +4,7 @@ type AsyncHandler = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => Promise<void>;
+) => Promise<unknown>;
 
 // 异步错误捕获包装器，消除 controller 中重复的 try/catch 模板
 function catchAsync(fn: AsyncHandler): RequestHandler {

@@ -30,10 +30,15 @@ const config = {
   ...rateLimitConfig,
   ...jwt,
   MESSAGE: "请求过于频繁，请稍后再试", // 错误消息
+  // 端口号
   port: Number(process.env.PORT) || 3000,
+  // MongoDB地址
   mongoUri:
     process.env.MONGO_URI || "mongodb://localhost:27017/ting-baby-memories",
+  // 跨域允许的来源
   corsOrigins: process.env.CORS_ORIGINS || "http://localhost:5173",
+  // 加密密钥
+  encryptSecretKey: process.env.ENCRYPT_SECRET_KEY,
 };
 
 export default config;
