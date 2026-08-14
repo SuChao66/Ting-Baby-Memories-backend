@@ -17,8 +17,8 @@ class Response {
   }
 
   static error(
-    message: string = "error",
     code: number = RESPONSE_CODE.SERVER_ERROR,
+    message: string = "error",
   ): ApiResponse<null> {
     return { code, message, data: null };
   }

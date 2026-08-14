@@ -9,4 +9,8 @@ export const RESPONSE_CODE = {
   SERVER_ERROR: 500,
 } as const;
 
+/** 密码强度校验正则表达式 */
+export const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]).{6,}$/;
+
 export type ResponseCode = (typeof RESPONSE_CODE)[keyof typeof RESPONSE_CODE];

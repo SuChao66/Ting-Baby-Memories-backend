@@ -18,7 +18,10 @@ function errorMiddleware(
   res
     .status(err.status || RESPONSE_CODE.SERVER_ERROR)
     .json(
-      ApiResponse.error(err.message || "服务器内部错误", err.status || 500),
+      ApiResponse.error(
+        err.status || RESPONSE_CODE.SERVER_ERROR,
+        err.message || "服务器内部错误",
+      ),
     );
 }
 

@@ -8,11 +8,12 @@ import type { Express } from "express";
 
 // 注册第三方中间件
 const registerThirdPartyMiddleware = (app: Express) => {
-  // 跨域中间件
+  // 跨域中间件（允许携带 cookie）
   app.use(
     cors({
       origin: config.corsOrigins,
       methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true, // 允许携带 cookie
     }),
   );
   // 安全中间件, 设置响应头, 防止 XSS 攻击, SQL 注入等
