@@ -43,6 +43,7 @@ module.exports = tseslint.config(
     files: ["eslint.config.js"],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 );

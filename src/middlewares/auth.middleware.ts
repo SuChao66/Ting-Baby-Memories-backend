@@ -4,12 +4,13 @@ import { TokenExpiredError } from "jsonwebtoken";
 import { Response as ApiResponse, JWT } from "@/utils";
 // 导入常量
 import { RESPONSE_CODE } from "@/enums";
+import type { TokenPayload } from "@/types/express";
 
 // 权限认证中间件：校验 cookie 中的 token
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // 从 cookie 中获取 token
   const token = req.cookies?.token;
-  // 1.缺少 token
+  // 1.缺少 token 时，返回未授权错误
   if (!token) {
     return res
       .status(RESPONSE_CODE.UNAUTHORIZED)
@@ -17,7 +18,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   }
   try {
     // 2.校验签名+有效期，过期抛 TokenExpiredError，无效抛 JsonWebTokenError
-    req.user = JWT.verify(token);
+    req.user = JWT.verify(token) as TokenPayload;
     next();
   } catch (err) {
     // 3.区分过期与无效，便于前端精确处理

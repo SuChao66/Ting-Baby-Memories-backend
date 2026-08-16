@@ -9,6 +9,8 @@ const UserSchema = new Schema(
     nickname: { type: String, default: null },
     avatarUrl: { type: String, default: null },
     status: { type: Number, default: 1 }, // 账号状态：0-禁用 1-正常
+    gender: { type: Number, default: 0 }, // 性别：0-女 1-男
+    phone: { type: String, default: null }, // 手机号
     // --- 内嵌用户资料 ---
     profile: {
       birthday: { type: Date, default: null },

@@ -5,9 +5,12 @@ import {
   login,
   register,
   forgetPassword,
+  getUserInfo,
 } from "@/controllers/user/user.controller";
 // 引入校验中间件与规则
 import validateMiddleware from "@/middlewares/validate.middleware";
+// 引入鉴权中间件
+import authMiddleware from "@/middlewares/auth.middleware";
 // 引入登录校验规则
 import {
   loginValidator,
@@ -30,5 +33,6 @@ router.post(
   validateMiddleware,
   forgetPassword,
 );
+router.get("/user", authMiddleware, getUserInfo);
 
 export default router;
