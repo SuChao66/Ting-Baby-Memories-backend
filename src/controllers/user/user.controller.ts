@@ -34,7 +34,9 @@ export const login = catchAsync(async (req, res) => {
     sameSite: "lax", // 防御 CSRF
     maxAge: maxAge, // 7天，与 token 有效期保持一致
   });
-  return res.json(Response.success(token, "登录成功"));
+  return res.json(
+    Response.success({ token, userInfo: user.toJSON() }, "登录成功"),
+  );
 });
 
 // 注册
@@ -59,7 +61,6 @@ export const forgetPassword = catchAsync(async (req, res) => {
   const { username, password } = req.body;
   // 获取当前用户是否存在
   const user = await User.findOne({ username });
-  console.log(user);
   if (!user) {
     return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "用户不存在"));
   }
@@ -73,4 +74,13 @@ export const forgetPassword = catchAsync(async (req, res) => {
   user.password = password;
   await user.save();
   res.json(Response.success("修改密码成功"));
+});
+
+// 获取用户信息
+export const getUserInfo = catchAsync(async (req, res) => {
+  const user = await User.findOne({ _id: req.user!.id });
+  if (!user) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "用户不存在"));
+  }
+  res.json(Response.success(user?.toJSON(), "获取用户信息成功"));
 });
