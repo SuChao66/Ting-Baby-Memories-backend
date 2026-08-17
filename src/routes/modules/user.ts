@@ -6,6 +6,7 @@ import {
   register,
   forgetPassword,
   getUserInfo,
+  updateUserInfo,
 } from "@/controllers/user/user.controller";
 // 引入校验中间件与规则
 import validateMiddleware from "@/middlewares/validate.middleware";
@@ -34,5 +35,6 @@ router.post(
   forgetPassword,
 );
 router.get("/user", authMiddleware, getUserInfo);
+router.post("/update", authMiddleware, updateUserInfo);
 
 export default router;
