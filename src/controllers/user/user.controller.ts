@@ -34,9 +34,12 @@ export const login = catchAsync(async (req, res) => {
     sameSite: "lax", // 防御 CSRF
     maxAge: maxAge, // 7天，与 token 有效期保持一致
   });
-  return res.json(
-    Response.success({ token, userInfo: user.toJSON() }, "登录成功"),
-  );
+  // 剔除敏感字段后返回用户信息
+  const userInfo = user.toJSON() as Record<string, unknown>;
+  delete userInfo.password;
+  delete userInfo.confirmPassword;
+  delete userInfo.__v;
+  return res.json(Response.success({ token, userInfo }, "登录成功"));
 });
 
 // 注册
@@ -78,9 +81,29 @@ export const forgetPassword = catchAsync(async (req, res) => {
 
 // 获取用户信息
 export const getUserInfo = catchAsync(async (req, res) => {
-  const user = await User.findOne({ _id: req.user!.id });
+  const user = await User.findOne(
+    { _id: req.user!.id },
+    { password: 0, __v: 0 },
+  );
   if (!user) {
     return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "用户不存在"));
   }
-  res.json(Response.success(user?.toJSON(), "获取用户信息成功"));
+  res.json(Response.success(user.toJSON(), "获取用户信息成功"));
+});
+
+// 更新用户信息
+export const updateUserInfo = catchAsync(async (req, res) => {
+  const { id, nickname, gender, phone, birthday } = req.body;
+  // 根据id获取用户信息
+  const user = await User.findOne({ _id: id });
+  if (!user) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "用户不存在"));
+  }
+  // 更新用户信息
+  user.nickname = nickname ? nickname : user.nickname;
+  user.gender = gender ? gender : user.gender;
+  user.phone = phone ? phone : user.phone;
+  user.profile!.birthday = birthday ? birthday : user?.profile?.birthday;
+  await user.save();
+  res.json(Response.success("", "用户信息更新成功"));
 });
