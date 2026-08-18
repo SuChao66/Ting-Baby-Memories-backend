@@ -5,6 +5,7 @@ import catchAsync from "@/utils/util/catchAsync";
 import logger from "@/utils/util/logger";
 import swagger from "@/utils/util/swagger";
 import { encrypt, decrypt } from "@/utils/util/encrypt";
+import { getExt } from "@/utils/util/file";
 
 const JWT = { sign: jwtSign, verify: jwtVerify };
 
@@ -17,4 +18,5 @@ export {
   swagger,
   encrypt,
   decrypt,
+  getExt,
 };

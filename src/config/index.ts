@@ -25,6 +25,16 @@ const jwt = {
   expiresIn: process.env.JWT_EXPIRES_IN || "7d", // JWT 过期时间
 };
 
+// 腾讯云 COS 配置
+const cos = {
+  secretId: process.env.COS_SECRET_ID || "",
+  secretKey: process.env.COS_SECRET_KEY || "",
+  bucket: process.env.COS_BUCKET || "",
+  region: process.env.COS_REGION || "",
+  // 永久访问域名（CDN 加速域名，未配置时使用 COS 默认域名）
+  cdnDomain: process.env.COS_CDN_DOMAIN || "",
+};
+
 const config = {
   env,
   ...rateLimitConfig,
@@ -39,6 +49,8 @@ const config = {
   corsOrigins: process.env.CORS_ORIGINS || "http://localhost:5173",
   // 加密密钥
   encryptSecretKey: process.env.ENCRYPT_SECRET_KEY,
+  // 腾讯云 COS
+  cos,
 };
 
 export default config;
