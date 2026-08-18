@@ -93,7 +93,7 @@ export const getUserInfo = catchAsync(async (req, res) => {
 
 // 更新用户信息
 export const updateUserInfo = catchAsync(async (req, res) => {
-  const { id, nickname, gender, phone, birthday } = req.body;
+  const { id, nickname, gender, phone, birthday, avatarUrl } = req.body;
   // 根据id获取用户信息
   const user = await User.findOne({ _id: id });
   if (!user) {
@@ -101,9 +101,10 @@ export const updateUserInfo = catchAsync(async (req, res) => {
   }
   // 更新用户信息
   user.nickname = nickname ? nickname : user.nickname;
-  user.gender = gender ? gender : user.gender;
+  user.gender = gender !== undefined ? gender : user.gender;
   user.phone = phone ? phone : user.phone;
   user.profile!.birthday = birthday ? birthday : user?.profile?.birthday;
+  user.avatarUrl = avatarUrl ? avatarUrl : user.avatarUrl;
   await user.save();
   res.json(Response.success("", "用户信息更新成功"));
 });

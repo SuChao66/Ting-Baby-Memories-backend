@@ -14,3 +14,6 @@ export const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]).{6,}$/;
 
 export type ResponseCode = (typeof RESPONSE_CODE)[keyof typeof RESPONSE_CODE];
+
+// 上传图片，允许的 Content-Type 白名单
+export const ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp"];
