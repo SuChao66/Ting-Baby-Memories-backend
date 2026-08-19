@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Baby from "@/models/Baby";
 import UserBabyRelation from "@/models/UserBabyRelation";
 // 引入响应工具模块
@@ -137,4 +138,17 @@ export const updateBabyInfo = catchAsync(async (req, res) => {
   }
 
   res.json(Response.success(baby));
+});
+
+// 删除宝宝信息
+export const deleteBaby = catchAsync(async (req, res) => {
+  const { id } = req.query;
+  // babyId 字段类型是 Schema.Types.ObjectId ，直接传字符串 id 可能会报类型不匹配，需要用 new mongoose.Types.ObjectId(id) 转换
+  const babyId = new mongoose.Types.ObjectId(id as string);
+  // 删除宝宝档案
+  // await Baby.findByIdAndDelete(babyId);
+  await Baby.deleteOne({ _id: babyId });
+  // 同步删除用户<->宝宝关系表中的数据
+  await UserBabyRelation.deleteMany({ babyId });
+  res.json(Response.success("删除成功"));
 });

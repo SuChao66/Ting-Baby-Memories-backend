@@ -12,6 +12,8 @@ export interface IUserBabyRelation extends Document {
 }
 
 // 用户 <-> 宝宝关系
+// 一个宝宝可能与多个用户关联（比如爸爸、妈妈都有关联记录）
+// 一个用户也可能与多个宝宝关联（比如：大宝、二宝、小宝）
 const userBabyRelationSchema = new Schema<IUserBabyRelation>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true }, // 用户ID
