@@ -74,7 +74,8 @@ export const addBaby = catchAsync(async (req, res) => {
 
 // 获取宝宝信息（单条记录）
 export const getBabyInfo = catchAsync(async (req, res) => {
-  const baby = await Baby.findOne();
+  const { id } = req.query;
+  const baby = await Baby.findById(id);
   if (!baby) {
     res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到宝宝信息"));
   }
@@ -83,15 +84,57 @@ export const getBabyInfo = catchAsync(async (req, res) => {
 
 // 更新宝宝信息
 export const updateBabyInfo = catchAsync(async (req, res) => {
-  const { name, birthday, avatar } = req.body;
-  let baby = await Baby.findOne();
+  const {
+    id,
+    nickname,
+    avatarUrl,
+    gender,
+    birthday,
+    birthTime,
+    bloodType,
+    birthWeight,
+    birthHeight,
+    allergens,
+    preferences,
+    remarks,
+    relation,
+  } = req.body;
+  const baby = await Baby.findById(id);
   if (!baby) {
-    baby = await Baby.create({ nickname: name, birthday, avatarUrl: avatar });
-  } else {
-    if (name !== undefined) baby.nickname = name;
-    if (birthday !== undefined) baby.birthday = birthday;
-    if (avatar !== undefined) baby.avatarUrl = avatar;
-    await baby.save();
+    res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到宝宝信息"));
+    return;
   }
+  if (nickname !== undefined) baby.nickname = nickname;
+  if (avatarUrl !== undefined) baby.avatarUrl = avatarUrl;
+  if (gender !== undefined) baby.gender = gender;
+  if (birthday !== undefined) baby.birthday = birthday;
+  if (birthTime !== undefined) baby.birthTime = birthTime;
+  // profile 字段更新
+  const profile =
+    baby.profile ||
+    (baby.profile = {
+      bloodType: null,
+      birthWeight: null,
+      birthHeight: null,
+      allergens: null,
+      preferences: null,
+      remarks: null,
+    });
+  if (bloodType !== undefined) profile.bloodType = bloodType;
+  if (birthWeight !== undefined) profile.birthWeight = birthWeight;
+  if (birthHeight !== undefined) profile.birthHeight = birthHeight;
+  if (allergens !== undefined) profile.allergens = allergens;
+  if (preferences !== undefined) profile.preferences = preferences;
+  if (remarks !== undefined) profile.remarks = remarks;
+  await baby.save();
+
+  // 更新用户与宝宝的关系
+  if (relation !== undefined) {
+    await UserBabyRelation.updateOne(
+      { babyId: id, userId: req.user!.id },
+      { relation },
+    );
+  }
+
   res.json(Response.success(baby));
 });
