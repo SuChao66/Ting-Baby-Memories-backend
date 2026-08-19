@@ -6,6 +6,7 @@ import {
   getBabyInfo,
   updateBabyInfo,
   addBaby,
+  deleteBaby,
 } from "@/controllers/baby/baby.controller";
 // 引入校验规则
 import { addBabyValidator, getBabyInfoValidator } from "@/validators";
@@ -24,5 +25,7 @@ router.post("/add", addBabyValidator, validateMiddleware, addBaby);
 router.get("/info", getBabyInfoValidator, validateMiddleware, getBabyInfo);
 // 更新宝宝信息
 router.post("/update", updateBabyInfo);
+// 删除宝宝档案
+router.delete("/delete", deleteBaby);
 
 export default router;
