@@ -2,6 +2,7 @@
 import express from "express";
 // 引入控制器模块
 import {
+  getHasBabyStatus,
   getBabyList,
   getBabyInfo,
   updateBabyInfo,
@@ -17,6 +18,8 @@ import validateMiddleware from "@/middlewares/validate.middleware";
 const router = express.Router();
 
 // 定义路由
+// 判断当前用户是否添加了宝宝
+router.get("/is_add_baby", getHasBabyStatus);
 // 获取宝宝列表
 router.get("/list", getBabyList);
 // 新增宝宝

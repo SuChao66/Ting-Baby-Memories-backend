@@ -6,6 +6,18 @@ import { Response, catchAsync } from "@/utils";
 // 导入常量
 import { RESPONSE_CODE } from "@/enums";
 
+// 判断当前用户是否添加了宝宝
+export const getHasBabyStatus = catchAsync(async (req, res) => {
+  // 获取当前用户id
+  const userId = req.user!.id;
+  // 通过用户与宝宝关系表查询宝宝列表（按最近访问时间倒序）
+  const releations = await UserBabyRelation.find({
+    userId,
+    status: 1,
+  });
+  res.json(Response.success(releations.length > 0 ? true : false));
+});
+
 // 获取宝宝列表
 export const getBabyList = catchAsync(async (req, res) => {
   const userId = req.user?.id || "";
