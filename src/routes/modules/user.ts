@@ -5,6 +5,7 @@ import {
   login,
   register,
   forgetPassword,
+  changePassword,
   getUserInfo,
   updateUserInfo,
 } from "@/controllers/user/user.controller";
@@ -16,6 +17,7 @@ import authMiddleware from "@/middlewares/auth.middleware";
 import {
   loginValidator,
   registerOrForgetPasswordValidator,
+  changePasswordValidator,
 } from "@/validators";
 
 // 创建路由实例
@@ -33,6 +35,13 @@ router.post(
   registerOrForgetPasswordValidator,
   validateMiddleware,
   forgetPassword,
+);
+router.post(
+  "/change_password",
+  changePasswordValidator,
+  validateMiddleware,
+  authMiddleware,
+  changePassword,
 );
 router.get("/user", authMiddleware, getUserInfo);
 router.post("/update", authMiddleware, updateUserInfo);
