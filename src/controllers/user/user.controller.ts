@@ -79,6 +79,27 @@ export const forgetPassword = catchAsync(async (req, res) => {
   res.json(Response.success("修改密码成功"));
 });
 
+// 修改密码
+export const changePassword = catchAsync(async (req, res) => {
+  const id = req.user!.id;
+  const { newPassword } = req.body;
+  // 获取当前用户是否存在
+  const user = await User.findOne({ _id: id });
+  if (!user) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "用户不存在"));
+  }
+  // 判断密码是否与旧密码相同
+  if (newPassword === user.password) {
+    return res.json(
+      Response.error(RESPONSE_CODE.BAD_REQUEST, "新密码不能与旧密码相同"),
+    );
+  }
+  // 更新用户密码
+  user.password = newPassword;
+  await user.save();
+  res.json(Response.success("修改密码成功"));
+});
+
 // 获取用户信息
 export const getUserInfo = catchAsync(async (req, res) => {
   const user = await User.findOne(
