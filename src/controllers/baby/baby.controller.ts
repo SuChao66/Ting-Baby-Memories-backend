@@ -87,8 +87,24 @@ export const addBaby = catchAsync(async (req, res) => {
 
 // 获取宝宝信息（单条记录）
 export const getBabyInfo = catchAsync(async (req, res) => {
+  const userId = req.user?.id;
   const { id } = req.query;
-  const baby = await Baby.findById(id);
+  const relations = await UserBabyRelation.find({
+    userId,
+    status: 1,
+  })
+    .populate("babyId")
+    .sort({ lastVisitAt: -1, createdAt: -1 })
+    .lean();
+  const babyList = relations
+    .filter((r) => r.babyId)
+    .map((r) => ({
+      ...(r.babyId as object),
+      relation: r.relation, // 用户和宝宝的关系
+      role: r.role, // 用户的角色
+    }));
+  const baby = babyList.find((item: any) => String(item._id) === id);
+  console.log(baby);
   if (!baby) {
     res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到宝宝信息"));
   }
