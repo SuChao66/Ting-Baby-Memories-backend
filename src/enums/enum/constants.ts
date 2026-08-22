@@ -6,6 +6,7 @@ export const RESPONSE_CODE = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   RATE_LIMIT: 429,
+  PARAM_ERROR: 430,
   SERVER_ERROR: 500,
 } as const;
 
