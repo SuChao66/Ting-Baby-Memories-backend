@@ -104,7 +104,6 @@ export const getBabyInfo = catchAsync(async (req, res) => {
       role: r.role, // 用户的角色
     }));
   const baby = babyList.find((item: any) => String(item._id) === id);
-  console.log(baby);
   if (!baby) {
     res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到宝宝信息"));
   }
