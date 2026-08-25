@@ -55,7 +55,7 @@ const timelineSchema = new Schema<ITimeline>(
     publishTime: { type: Date, required: true },
     visibleRoles: {
       type: String,
-      enum: ["all", "mother", "father", "grandparent", "other"],
+      enum: ["public", "family", "private"],
       default: "all",
     },
   },
