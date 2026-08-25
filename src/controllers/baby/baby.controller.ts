@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+// 导入模型
 import Baby from "@/models/Baby";
 import UserBabyRelation from "@/models/UserBabyRelation";
+import Timeline from "@/models/Timeline";
 // 引入响应工具模块
 import { Response, catchAsync } from "@/utils";
 // 导入常量
@@ -37,6 +39,26 @@ export const getBabyList = catchAsync(async (req, res) => {
       relation: r.relation, // 用户和宝宝的关系
       role: r.role, // 用户的角色
     }));
+  // 获取对应宝宝的记录数（聚合管道，一次查询拿到所有）
+  const counts = await Timeline.aggregate([
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+        babyId: { $in: babyList.map((b: any) => b._id) },
+      },
+    },
+    {
+      $group: {
+        _id: "$babyId",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  const countMap = new Map(counts.map((c) => [String(c._id), c.count]));
+  babyList.forEach((baby: any) => {
+    baby.record_count = countMap.get(String(baby._id)) || 0;
+  });
+
   res.json(Response.success(babyList));
 });
 
