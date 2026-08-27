@@ -56,7 +56,7 @@ const timelineSchema = new Schema<ITimeline>(
     visibleRoles: {
       type: String,
       enum: ["public", "family", "private"],
-      default: "all",
+      default: "family",
     },
   },
   { timestamps: true }, // 自动添加 createdAt 和 updatedAt 字段
