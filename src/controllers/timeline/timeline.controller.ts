@@ -21,24 +21,44 @@ export const getTimeline = catchAsync(async (req, res) => {
   if (!relations.length) {
     return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
   }
-  // 获取数据
-  const total = await Timeline.countDocuments({
-    userId,
+  // 查询条件
+  const query = {
     babyId,
-  } as any);
-  const list = await Timeline.find({
-    userId,
-    babyId,
-  } as any)
-    .sort({ createdAt: -1 })
+    $or: [
+      { visibleRoles: { $in: ["public", "family"] } },
+      {
+        visibleRoles: "private",
+        userId,
+      },
+    ],
+  };
+  // 1.查 Timeline 记录（populate 拿昵称、头像）
+  const total = await Timeline.countDocuments(query as any);
+  const list = await Timeline.find(query as any)
+    .populate("userId", "nickname avatarUrl")
+    .sort({ publishTime: -1 })
     .skip((page - 1) * pageSize)
     .limit(pageSize)
     .lean();
-  const result = {
-    total,
-    data: list,
-  };
-  res.json(Response.success(result, "获取成功"));
+  // 2.查询该宝宝的所有家庭成员关系，按userId进行映射
+  const all_releations = await UserBabyRelation.find({
+    babyId,
+    status: 1,
+  }).lean();
+  const relationMap = new Map();
+  all_releations.forEach((r) => {
+    relationMap.set(r.userId.toString(), r.relation);
+  });
+  // 3.把 relation 合并到每条记录的发布者信息上
+  const data = list.map((item) => ({
+    ...item,
+    userInfo: {
+      ...(item.userId as any), // _id, nickname, avatarUrl
+      relation: relationMap.get((item.userId as any)._id.toString()),
+    },
+  }));
+  // 4.响应
+  res.json(Response.success({ total, data }, "获取成功"));
 });
 
 // 发布记录
