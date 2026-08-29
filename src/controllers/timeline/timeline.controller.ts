@@ -1,7 +1,8 @@
+import mongoose from "mongoose";
 // 引入响应工具模块
 import { Response, catchAsync } from "@/utils";
 // 导入常量
-import { RESPONSE_CODE } from "@/enums";
+import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES } from "@/enums";
 // 导入模型
 import Timeline from "@/models/Timeline";
 import UserBabyRelation from "@/models/UserBabyRelation";
@@ -96,4 +97,68 @@ export const addTimeLine = catchAsync(async (req, res) => {
   });
   await timeline.save();
   return res.json(Response.success(null, "发布成功"));
+});
+
+// 更新记录
+export const editTimeLine = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取请求参数
+  const { id, content, files, tags, isMilestone, publishTime, visibleRoles } =
+    req.body;
+  // 查询记录（仅能更新自己的记录）
+  const timeline = await Timeline.findOne({ _id: id, userId } as any);
+  if (!timeline) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到记录信息"),
+    );
+  }
+  if (content !== undefined) timeline.content = content;
+  if (files !== undefined) timeline.files = files;
+  if (tags !== undefined) timeline.tags = tags;
+  if (isMilestone !== undefined) timeline.isMilestone = isMilestone;
+  if (publishTime !== undefined) timeline.publishTime = publishTime;
+  if (visibleRoles !== undefined) timeline.visibleRoles = visibleRoles;
+  await timeline.save();
+  return res.json(Response.success("更新成功"));
+});
+
+// 获取记录详情
+export const getTimeLineInfo = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取记录id
+  const { id } = req.query;
+  // 根据id获取当前记录详情
+  const timeline = await Timeline.findById(id);
+  if (!timeline) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "获取失败"));
+  }
+  // 如果是 private 记录，校验是否为发布者本人
+  if (
+    timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
+    timeline.userId.toString() !== userId
+  ) {
+    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+  }
+  return res.json(Response.success(timeline, "获取成功"));
+});
+
+// 删除记录
+export const deleteTimeLineInfo = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取记录id
+  const id = req.query.id as string;
+  // 删除记录
+  const result = await Timeline.findOneAndDelete({
+    _id: new mongoose.Types.ObjectId(id),
+    userId,
+  } as any);
+  if (!result) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "记录不存在或无权删除"),
+    );
+  }
+  return res.json(Response.success("删除成功"));
 });

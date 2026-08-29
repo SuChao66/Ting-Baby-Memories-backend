@@ -4,9 +4,18 @@ import express from "express";
 import {
   getTimeline,
   addTimeLine,
+  editTimeLine,
+  getTimeLineInfo,
+  deleteTimeLineInfo,
 } from "@/controllers/timeline/timeline.controller";
 // 导入校验器
-import { addTimeLineValidator, getTimeLineValidator } from "@/validators";
+import {
+  addTimeLineValidator,
+  editTimeLineValidator,
+  getTimeLineValidator,
+  getTimeLineInfoValidator,
+  deleteTimeLineInfoValidator,
+} from "@/validators";
 import validateMiddleware from "@/middlewares/validate.middleware";
 
 const router = express.Router();
@@ -14,5 +23,18 @@ const router = express.Router();
 // 定义路由
 router.post("/list", getTimeLineValidator, validateMiddleware, getTimeline);
 router.post("/add", addTimeLineValidator, validateMiddleware, addTimeLine);
+router.post("/edit", editTimeLineValidator, validateMiddleware, editTimeLine);
+router.get(
+  "/info",
+  getTimeLineInfoValidator,
+  validateMiddleware,
+  getTimeLineInfo,
+);
+router.delete(
+  "/delete",
+  deleteTimeLineInfoValidator,
+  validateMiddleware,
+  deleteTimeLineInfo,
+);
 
 export default router;
