@@ -25,3 +25,10 @@ export const ALLOWED_CONTENT_TYPES = [
   "video/webm",
   "video/quicktime",
 ];
+
+// 记录权限
+export const TIME_LINE_VISIBLE_ROLES = {
+  PUBLIC: "public", // 公开
+  FAMILY: "family", // 家庭
+  PRIVATE: "private", // 私有
+};

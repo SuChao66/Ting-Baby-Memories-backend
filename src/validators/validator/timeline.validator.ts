@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 
 export const getTimeLineValidator = [
   body("babyId").isMongoId().notEmpty().withMessage("babyId不能为空"),
@@ -21,4 +21,17 @@ export const addTimeLineValidator = [
   body("files.*.type").isIn(["IMAGE", "VIDEO"]),
   body("tags").optional().isArray(),
   body("tags.*").isString(),
+];
+
+export const editTimeLineValidator = [
+  ...addTimeLineValidator,
+  body("id").isString().trim().notEmpty().withMessage("记录id不能为空"),
+];
+
+export const getTimeLineInfoValidator = [
+  query("id").isString().notEmpty().withMessage("记录id不能为空"),
+];
+
+export const deleteTimeLineInfoValidator = [
+  query("id").isString().notEmpty().withMessage("记录id不能为空"),
 ];
