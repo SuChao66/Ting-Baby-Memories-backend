@@ -6,10 +6,11 @@ import { Response as ApiResponse, JWT } from "@/utils";
 import { RESPONSE_CODE } from "@/enums";
 import type { TokenPayload } from "@/types/express";
 
-// 权限认证中间件：校验 cookie 中的 token
+// 权限认证中间件：优先从 cookie 读取 token，回退到 Authorization header
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  // 从 cookie 中获取 token
-  const token = req.cookies?.token;
+  // 从 cookie 中获取 token，或从 Authorization header 回退获取
+  const token =
+    req.cookies?.token || req.headers?.authorization?.replace("Bearer ", "");
   // 1.缺少 token 时，返回未授权错误
   if (!token) {
     return res
