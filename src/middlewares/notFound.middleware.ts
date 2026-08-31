@@ -6,7 +6,7 @@ import { RESPONSE_CODE } from "@/enums";
 function notFoundMiddleware(req: Request, res: Response): void {
   res
     .status(RESPONSE_CODE.NOT_FOUND)
-    .json(ApiResponse.error("接口不存在", RESPONSE_CODE.NOT_FOUND));
+    .json(ApiResponse.error(RESPONSE_CODE.NOT_FOUND, "接口不存在"));
 }
 
 export default notFoundMiddleware;
