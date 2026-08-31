@@ -7,6 +7,7 @@ import {
   editTimeLine,
   getTimeLineInfo,
   deleteTimeLineInfo,
+  publishComment,
 } from "@/controllers/timeline/timeline.controller";
 // 导入校验器
 import {
@@ -15,6 +16,7 @@ import {
   getTimeLineValidator,
   getTimeLineInfoValidator,
   deleteTimeLineInfoValidator,
+  commentValidator,
 } from "@/validators";
 import validateMiddleware from "@/middlewares/validate.middleware";
 
@@ -36,5 +38,6 @@ router.delete(
   validateMiddleware,
   deleteTimeLineInfo,
 );
+router.post("/comment", commentValidator, validateMiddleware, publishComment);
 
 export default router;
