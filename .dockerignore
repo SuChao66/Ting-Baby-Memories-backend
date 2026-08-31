@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.husky
+*.md
+.env.development
+.env.production
+.prettierrc.json
+.editorconfig
