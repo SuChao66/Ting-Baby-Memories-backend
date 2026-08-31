@@ -6,6 +6,7 @@ import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES } from "@/enums";
 // 导入模型
 import Timeline from "@/models/Timeline";
 import UserBabyRelation from "@/models/UserBabyRelation";
+import User from "@/models/User";
 
 // 根据babyId获取某宝宝的记录
 export const getTimeline = catchAsync(async (req, res) => {
@@ -121,6 +122,42 @@ export const editTimeLine = catchAsync(async (req, res) => {
   if (visibleRoles !== undefined) timeline.visibleRoles = visibleRoles;
   await timeline.save();
   return res.json(Response.success("更新成功"));
+});
+
+// 发表评论
+export const publishComment = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取请求参数
+  const { id, comment } = req.body;
+  // 查询记录
+  const timeline = await Timeline.findById(id);
+  if (!timeline) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到记录信息"),
+    );
+  }
+  // 可见性校验：private 仅发布者本人可评论
+  if (
+    timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
+    timeline.userId.toString() !== userId
+  ) {
+    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+  }
+  // 获取当前用户信息
+  const userInfo = await User.findOne(
+    { _id: userId },
+    { nickname: 1, avatarUrl: 1, _id: 0 },
+  ).lean();
+  if (comment) {
+    timeline.comments?.push({
+      ...comment,
+      userId,
+      userInfo: { ...userInfo, releation: comment.releation },
+    });
+  }
+  await timeline.save();
+  return res.json(Response.success("发表评论成功"));
 });
 
 // 获取记录详情

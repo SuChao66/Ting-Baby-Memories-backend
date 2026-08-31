@@ -1,10 +1,18 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+// 用户信息
+interface IUserInfo {
+  nickname: string;
+  avatarUrl: string;
+  releation: string;
+}
+
 // 评论
 interface IComment {
   userId: Schema.Types.ObjectId;
   content: string;
   createdAt: Date;
+  userInfo: IUserInfo;
 }
 
 // 文件
@@ -36,6 +44,7 @@ const timelineSchema = new Schema<ITimeline>(
         {
           userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
           content: { type: String, required: true },
+          userInfo: { type: Object },
           createdAt: { type: Date, default: Date.now },
         },
       ],
