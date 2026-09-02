@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 // 引入响应工具模块
-import { Response, catchAsync } from "@/utils";
+import { Response, catchAsync, formatDate } from "@/utils";
 // 导入常量
-import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES } from "@/enums";
+import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES, FILE_TYPE } from "@/enums";
 // 导入模型
 import Timeline from "@/models/Timeline";
 import UserBabyRelation from "@/models/UserBabyRelation";
 import User from "@/models/User";
+import COS from "cos-nodejs-sdk-v5";
 
 // 根据babyId获取某宝宝的记录
 export const getTimeline = catchAsync(async (req, res) => {
@@ -198,4 +199,75 @@ export const deleteTimeLineInfo = catchAsync(async (req, res) => {
     );
   }
   return res.json(Response.success("删除成功"));
+});
+
+// 根据babyId 获取某宝宝的文件列表
+export const getFileList = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取请求参数
+  const { babyId, type, isMonth, month } = req.body;
+  // 校验当前babyId和userId的关系，禁止越权读取
+  const relations = await UserBabyRelation.find({
+    userId,
+    babyId,
+    status: 1,
+  });
+  if (!relations.length) {
+    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+  }
+  // 查询条件
+  const query: any = {
+    babyId,
+    // 仅匹配 files 数组中至少存在 1 个元素的记录（比 $ne: [] 更稳，不会匹配到 null 或缺失字段）
+    "files.0": { $exists: true },
+    $or: [
+      { visibleRoles: { $in: ["public", "family"] } },
+      {
+        visibleRoles: "private",
+        userId,
+      },
+    ],
+  };
+  // 将类型过滤下推到数据库，只拉取包含目标类型文件的记录
+  if (type === FILE_TYPE.IMAGE) {
+    query["files.type"] = "IMAGE";
+  } else if (type === FILE_TYPE.VIDEO) {
+    query["files.type"] = "VIDEO";
+  }
+  // 按月加载：month 格式为 "YYYY-MM"，仅查询该月记录
+  if (isMonth && month) {
+    const [y, m] = month.split("-").map(Number);
+    // 该月第一天 0 点
+    const start = new Date(y, m - 1, 1);
+    // 次月第一天 0 点
+    const end = new Date(y, m, 1);
+    query.publishTime = { $gte: start, $lt: end };
+  }
+  const list = await Timeline.find(query, { files: 1, publishTime: 1 })
+    .sort({ publishTime: -1 })
+    .lean();
+  // 按日期分组（按月视图时按天分组，与日视图结构一致）
+  const fileMap: Record<string, any[]> = {};
+  list.forEach((item) => {
+    const { year, month: m, day } = formatDate(item.publishTime);
+    const dayKey = isMonth
+      ? `${year}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+      : `${year}-${m}-${day}`;
+    // 如果当前日期不存在，创建一个新数组
+    if (!fileMap[dayKey]) {
+      fileMap[dayKey] = [];
+    }
+    item.files!.forEach((file) => {
+      fileMap[dayKey].push(file);
+    });
+  });
+  // 去掉空数组
+  Object.keys(fileMap).forEach((key) => {
+    if (fileMap[key].length === 0) {
+      delete fileMap[key];
+    }
+  });
+  // 返回文件列表
+  return res.json(Response.success(fileMap, "获取成功"));
 });

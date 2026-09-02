@@ -49,3 +49,9 @@ export const commentValidator = [
     .notEmpty()
     .withMessage("评论者不能为空"),
 ];
+
+export const getFileListValidator = [
+  body("babyId").isMongoId().notEmpty().withMessage("babyId不能为空"),
+  body("type").isString().notEmpty().withMessage("type不能为空"),
+  body("type").isIn(["all", "img", "video"]).withMessage("type参数不合法"),
+];

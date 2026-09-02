@@ -32,3 +32,9 @@ export const TIME_LINE_VISIBLE_ROLES = {
   FAMILY: "family", // 家庭
   PRIVATE: "private", // 私有
 };
+
+// 文件类型
+export const FILE_TYPE = {
+  IMAGE: "img",
+  VIDEO: "video",
+};

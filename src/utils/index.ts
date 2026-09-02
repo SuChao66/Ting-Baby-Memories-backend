@@ -6,6 +6,7 @@ import logger from "@/utils/util/logger";
 import swagger from "@/utils/util/swagger";
 import { encrypt, decrypt } from "@/utils/util/encrypt";
 import { getExt } from "@/utils/util/file";
+import { formatDate } from "@/utils/util/time";
 
 const JWT = { sign: jwtSign, verify: jwtVerify };
 
@@ -19,4 +20,5 @@ export {
   encrypt,
   decrypt,
   getExt,
+  formatDate,
 };
