@@ -39,12 +39,19 @@ export const getBabyList = catchAsync(async (req, res) => {
       relation: r.relation, // 用户和宝宝的关系
       role: r.role, // 用户的角色
     }));
+  console.log("babyList", babyList);
   // 获取对应宝宝的记录数（聚合管道，一次查询拿到所有）
   const counts = await Timeline.aggregate([
     {
       $match: {
-        userId: new mongoose.Types.ObjectId(userId),
         babyId: { $in: babyList.map((b: any) => b._id) },
+        $or: [
+          { visibleRoles: { $in: ["public", "family"] } },
+          {
+            visibleRoles: "private",
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+        ],
       },
     },
     {
@@ -55,6 +62,7 @@ export const getBabyList = catchAsync(async (req, res) => {
     },
   ]);
   const countMap = new Map(counts.map((c) => [String(c._id), c.count]));
+  console.log(countMap);
   babyList.forEach((baby: any) => {
     baby.record_count = countMap.get(String(baby._id)) || 0;
   });
@@ -200,4 +208,51 @@ export const deleteBaby = catchAsync(async (req, res) => {
   // 同步删除用户<->宝宝关系表中的数据
   await UserBabyRelation.deleteMany({ babyId });
   res.json(Response.success("删除成功"));
+});
+
+// 关联宝宝
+export const bindBaby = catchAsync(async (req, res) => {
+  const { baby_no, relation } = req.body;
+  // 获取当前用户 ID
+  const userId = req.user!.id;
+  // 1. 先校验格式，避免 ObjectId 构造抛错
+  if (!baby_no || !mongoose.Types.ObjectId.isValid(baby_no)) {
+    return res.json(
+      Response.error(RESPONSE_CODE.PARAM_ERROR, "宝宝号格式不正确"),
+    );
+  }
+  // 2.判断当前宝宝是否存在
+  const baby = await Baby.findById(baby_no);
+  if (!baby) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "当前宝宝不存在"));
+  }
+  // 3.判断当前用户是否已经绑定了当前宝宝
+  const existing = await UserBabyRelation.findOne({
+    userId,
+    babyId: baby._id,
+  });
+  if (existing) {
+    // 根据status判断是否解绑过
+    if (existing.status === 1) {
+      return res.json(
+        Response.error(
+          RESPONSE_CODE.BAD_REQUEST,
+          "当前用户已绑定了该宝宝，请勿重复关联",
+        ),
+      );
+    }
+    // 曾经解绑过
+    existing.status = 1;
+    existing.relation = relation || existing.relation;
+    await existing.save();
+    return res.json(Response.success(null, "关联成功"));
+  }
+  // 4.创建当前用户与宝宝的关系记录（默认为观察者角色）
+  await UserBabyRelation.create({
+    userId,
+    babyId: baby._id,
+    relation: relation || "other",
+    role: "observer",
+  });
+  return res.json(Response.success(null, "关联成功"));
 });
