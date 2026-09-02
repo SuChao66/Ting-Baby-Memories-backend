@@ -29,3 +29,5 @@ export const NUMBER = {
   HUNDRED: 100,
   THOUSAND: 1000,
 };
+
+export const VISIT_INTERVAL = 30 * 60 * 1000;

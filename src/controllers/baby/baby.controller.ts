@@ -39,7 +39,6 @@ export const getBabyList = catchAsync(async (req, res) => {
       relation: r.relation, // 用户和宝宝的关系
       role: r.role, // 用户的角色
     }));
-  console.log("babyList", babyList);
   // 获取对应宝宝的记录数（聚合管道，一次查询拿到所有）
   const counts = await Timeline.aggregate([
     {
@@ -62,7 +61,6 @@ export const getBabyList = catchAsync(async (req, res) => {
     },
   ]);
   const countMap = new Map(counts.map((c) => [String(c._id), c.count]));
-  console.log(countMap);
   babyList.forEach((baby: any) => {
     baby.record_count = countMap.get(String(baby._id)) || 0;
   });
