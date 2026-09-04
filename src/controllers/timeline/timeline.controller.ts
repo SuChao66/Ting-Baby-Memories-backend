@@ -7,14 +7,13 @@ import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES, FILE_TYPE } from "@/enums";
 import Timeline from "@/models/Timeline";
 import UserBabyRelation from "@/models/UserBabyRelation";
 import User from "@/models/User";
-import COS from "cos-nodejs-sdk-v5";
 
-// 根据babyId获取某宝宝的记录
+// 根据babyId获取某宝宝的记录（isMilestone 为 true 时仅返回大事记）
 export const getTimeline = catchAsync(async (req, res) => {
   // 获取userId
   const userId = req.user?.id;
   // 获取请求参数
-  const { babyId, page, pageSize } = req.body;
+  const { babyId, page, pageSize, isMilestone } = req.body;
   // 校验当前babyId和userId的关系，禁止越权获取
   const relations = await UserBabyRelation.find({
     userId,
@@ -27,6 +26,8 @@ export const getTimeline = catchAsync(async (req, res) => {
   // 查询条件
   const query = {
     babyId,
+    // 仅查询大事记
+    ...(isMilestone ? { isMilestone: true } : {}),
     $or: [
       { visibleRoles: { $in: ["public", "family"] } },
       {
