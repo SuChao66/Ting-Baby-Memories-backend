@@ -7,6 +7,7 @@ import uploadRouter from "@/routes/modules/upload";
 import timelineRouter from "@/routes/modules/timeline";
 import TagsRouter from "@/routes/modules/tags";
 import familyRouter from "@/routes/modules/family";
+import futureMessageRouter from "@/routes/modules/futureMessage";
 // 引入鉴权中间件
 import authMiddleware from "@/middlewares/auth.middleware";
 
@@ -20,5 +21,6 @@ router.use("/v1/baby", authMiddleware, babyRouter);
 router.use("/v1/timeline", authMiddleware, timelineRouter);
 router.use("/v1/tags", authMiddleware, TagsRouter);
 router.use("/v1/family", authMiddleware, familyRouter);
+router.use("/v1/future-message", authMiddleware, futureMessageRouter);
 
 export default router;

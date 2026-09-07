@@ -24,6 +24,9 @@ export const ALLOWED_CONTENT_TYPES = [
   "video/mp4",
   "video/webm",
   "video/quicktime",
+  "audio/mp3",
+  "audio/wav",
+  "audio/mpeg",
 ];
 
 // 记录权限
@@ -37,4 +40,5 @@ export const TIME_LINE_VISIBLE_ROLES = {
 export const FILE_TYPE = {
   IMAGE: "img",
   VIDEO: "video",
+  AUDIO: "audio",
 };
