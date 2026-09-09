@@ -35,4 +35,10 @@ export const getFutureMessageListValidator = [
   body("page").isInt({ min: 1 }).toInt(),
   body("pageSize").notEmpty().withMessage("pageSize不能为空"),
   body("pageSize").isInt({ min: 10 }).toInt(),
+  body("isUnlock").optional().isBoolean(),
+];
+
+// 获取当前baby已解锁的信件数量
+export const getUnlockCountValidator = [
+  query("babyId").isMongoId().notEmpty().withMessage("宝宝id不能为空"),
 ];

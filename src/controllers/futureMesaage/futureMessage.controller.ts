@@ -10,7 +10,7 @@ export const getFutureMessageList = catchAsync(async (req, res) => {
   // 获取userId
   const userId = req.user?.id;
   // 获取入参
-  const { babyId, page, pageSize } = req.body;
+  const { babyId, isUnlock, page, pageSize } = req.body;
   // 校验user和babyId的关系，是否越权访问
   const relation = await UserBabyRelation.findOne({
     userId,
@@ -23,7 +23,7 @@ export const getFutureMessageList = catchAsync(async (req, res) => {
   // 封装查询条件(分页查询)
   const query = {
     babyId,
-    revealDate: { $gt: new Date() },
+    revealDate: isUnlock ? { $lt: new Date() } : { $gt: new Date() },
     $or: [
       { visibleRoles: { $in: ["public", "family"] } },
       {
@@ -62,6 +62,37 @@ export const getFutureMessageList = catchAsync(async (req, res) => {
     };
   });
   return res.json(Response.success({ total, list: data }, "获取成功"));
+});
+
+// 获取已解锁的信件数量
+export const getUnlockCount = catchAsync(async (req, res) => {
+  // 获取userId
+  const userId = req.user?.id;
+  // 获取入参
+  const { babyId } = req.query as any;
+  // 校验user和babyId的关系，是否越权访问
+  const relation = await UserBabyRelation.findOne({
+    userId,
+    babyId,
+    status: 1,
+  });
+  if (!relation) {
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
+  }
+  // 封装查询条件(分页查询)
+  const query = {
+    babyId,
+    revealDate: { $lt: new Date() },
+    $or: [
+      { visibleRoles: { $in: ["public", "family"] } },
+      {
+        visibleRoles: "private",
+        userId,
+      },
+    ],
+  };
+  const total = await FutureMessage.countDocuments(query as any);
+  return res.json(Response.success(total, "获取成功"));
 });
 
 // 添加未来寄语

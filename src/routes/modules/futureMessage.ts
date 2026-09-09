@@ -8,6 +8,7 @@ import {
   updateFutureMessageValidator,
   deleteFutureMessageValidator,
   getFutureMessageListValidator,
+  getUnlockCountValidator,
 } from "@/validators";
 // 导入控制器
 import {
@@ -15,6 +16,7 @@ import {
   addFutureMessage,
   updateFutureMessage,
   deleteFutureMessage,
+  getUnlockCount,
 } from "@/controllers/futureMesaage/futureMessage.controller";
 
 // 创建路由实例
@@ -44,6 +46,12 @@ router.delete(
   deleteFutureMessageValidator,
   validateMiddleware,
   deleteFutureMessage,
+);
+router.get(
+  "/unlock-count",
+  getUnlockCountValidator,
+  validateMiddleware,
+  getUnlockCount,
 );
 
 export default router;
