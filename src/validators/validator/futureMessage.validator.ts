@@ -42,3 +42,10 @@ export const getFutureMessageListValidator = [
 export const getUnlockCountValidator = [
   query("babyId").isMongoId().notEmpty().withMessage("宝宝id不能为空"),
 ];
+
+// 标记未来寄语为已读规则
+export const markFutureMessageReadValidator = [
+  body("messageIds").isArray().notEmpty().withMessage("寄语id不能为空"),
+  body("messageIds.*").isMongoId().withMessage("寄语id格式不正确"),
+  body("babyId").isMongoId().notEmpty().withMessage("宝宝id不能为空"),
+];
