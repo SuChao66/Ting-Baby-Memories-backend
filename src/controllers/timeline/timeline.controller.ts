@@ -86,7 +86,7 @@ export const addTimeLine = catchAsync(async (req, res) => {
     status: 1,
   });
   if (!relations.length) {
-    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   const timeline = new Timeline({
     userId,
