@@ -104,6 +104,66 @@ export const addDailyRecord = catchAsync(async (req, res) => {
 
 // 编辑记录
 export const editDailyRecord = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取请求参数
+  const {
+    id,
+    babyId,
+    startTime,
+    remark,
+    duration,
+    eventName,
+    foodName,
+    foodWeight,
+    status,
+    poopColor,
+    poopShape,
+    peeAmount,
+    hasRash,
+    breastMode,
+    leftDuration,
+    rightDuration,
+    lastUsedSide,
+    estimatedAmount,
+    formulaAmount,
+    breastMilkAmount,
+  } = req.body;
+  // 仅创建人可编辑（userId 匹配记录创建人）
+  const dailyRecord = await DailyRecord.findOneAndUpdate(
+    {
+      _id: id,
+      userId,
+      babyId,
+    },
+    {
+      $set: {
+        startTime,
+        remark,
+        duration,
+        eventName,
+        foodName,
+        foodWeight,
+        status,
+        poopColor,
+        poopShape,
+        peeAmount,
+        hasRash,
+        breastMode,
+        leftDuration,
+        rightDuration,
+        lastUsedSide,
+        estimatedAmount,
+        formulaAmount,
+        breastMilkAmount,
+      },
+    },
+  );
+  if (!dailyRecord) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "记录不存在,无法修改"),
+    );
+  }
   return res.json(Response.success("编辑成功"));
 });
 
@@ -113,6 +173,7 @@ export const deleteDailyRecord = catchAsync(async (req, res) => {
   const userId = req.user?.id;
   // 获取记录id
   const id = req.query.id as string;
+  // 仅创建人可删除（userId 匹配记录创建人）
   // 删除记录
   const dailyRecord = await DailyRecord.findOneAndDelete({
     _id: id,
