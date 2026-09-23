@@ -109,5 +109,19 @@ export const editDailyRecord = catchAsync(async (req, res) => {
 
 // 删除记录
 export const deleteDailyRecord = catchAsync(async (req, res) => {
-  return res.json(Response.success("删除成功"));
+  // 获取用户id
+  const userId = req.user?.id;
+  // 获取记录id
+  const id = req.query.id as string;
+  // 删除记录
+  const dailyRecord = await DailyRecord.findOneAndDelete({
+    _id: id,
+    userId,
+  });
+  if (!dailyRecord) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "当前记录不存在，无法删除"),
+    );
+  }
+  return res.json(Response.success(null, "删除成功"));
 });
