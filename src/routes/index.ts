@@ -9,6 +9,7 @@ import TagsRouter from "@/routes/modules/tags";
 import familyRouter from "@/routes/modules/family";
 import futureMessageRouter from "@/routes/modules/futureMessage";
 import dailyRouter from "@/routes/modules/dailyRecord";
+import heightWeightRouter from "@/routes/modules/heightWeight";
 // 引入鉴权中间件
 import authMiddleware from "@/middlewares/auth.middleware";
 
@@ -24,5 +25,6 @@ router.use("/v1/tags", authMiddleware, TagsRouter);
 router.use("/v1/family", authMiddleware, familyRouter);
 router.use("/v1/future-message", authMiddleware, futureMessageRouter);
 router.use("/v1/daily_record", authMiddleware, dailyRouter);
+router.use("/v1/weight_height", authMiddleware, heightWeightRouter);
 
 export default router;
