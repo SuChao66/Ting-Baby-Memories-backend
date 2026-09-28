@@ -132,3 +132,62 @@ export const POOP_SHAPE_OPTIONS = [
 
 /** 尿量选项 */
 export const PEE_AMOUNT_OPTIONS = ["little", "medium", "much"] as const;
+
+/** 症状护理类型 */
+export const SYMPTOM_RECORD_TYPES = {
+  /** 体温 */
+  TEMPERATURE: "temperature",
+  /** 症状 */
+  SYMPTOM: "symptom",
+  /** 用药 */
+  MEDICATION: "medication",
+  /** 看医生 */
+  DOCTOR: "doctor",
+  /** 备忘 */
+  MEMO: "memo",
+} as const;
+
+/** 症状选项（按身体部位平铺，与前端 SYMPTOM_GROUPS 一致） */
+export const SYMPTOM_OPTIONS = [
+  // 头部
+  "runnyNose",
+  "cough",
+  "spitUpMilk",
+  "occipitalBaldness",
+  "teethGrinding",
+  "nosebleed",
+  "eyeDischarge",
+  "drooling",
+  "snoring",
+  "badBreath",
+  // 腹部
+  "bellyAche",
+  "diarrhea",
+  // 腰臀
+  "diaperRash",
+  "constipation",
+  "frequentUrination",
+  // 全身
+  "fever",
+  "rash",
+  "sweating",
+  "convulsion",
+  "shortStature",
+  // 其他
+  "lethargy",
+  "emotionalInstability",
+  "poorAppetite",
+  "nightCrying",
+  "drowsiness",
+] as const;
+
+/** 药品使用类型 */
+export const MEDICATION_USAGE_TYPES = {
+  /** 内服 */
+  INTERNAL: "internal",
+  /** 外用（如退烧贴） */
+  EXTERNAL: "external",
+} as const;
+
+/** 体温值范围（℃） */
+export const TEMPERATURE_RANGE = { MIN: 34, MAX: 43 } as const;

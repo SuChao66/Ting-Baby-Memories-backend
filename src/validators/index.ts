@@ -7,3 +7,4 @@ export * from "./validator/family.validator";
 export * from "./validator/futureMessage.validator";
 export * from "./validator/dailyRecord.validator";
 export * from "./validator/heightWeight.validator";
+export * from "./validator/symptomRecord.validator";
