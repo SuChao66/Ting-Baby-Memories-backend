@@ -8,3 +8,5 @@ export * from "./validator/futureMessage.validator";
 export * from "./validator/dailyRecord.validator";
 export * from "./validator/heightWeight.validator";
 export * from "./validator/symptomRecord.validator";
+export * from "./validator/vaccineRecord.validator";
+export * from "./validator/vaccinePlan.validator";

@@ -11,6 +11,8 @@ import futureMessageRouter from "@/routes/modules/futureMessage";
 import dailyRouter from "@/routes/modules/dailyRecord";
 import heightWeightRouter from "@/routes/modules/heightWeight";
 import symptomRecordRouter from "@/routes/modules/symptomRecord";
+import vaccineRecordRouter from "@/routes/modules/vaccineRecord";
+import vaccinePlanRouter from "@/routes/modules/vaccinePlan";
 // 引入鉴权中间件
 import authMiddleware from "@/middlewares/auth.middleware";
 
@@ -28,5 +30,7 @@ router.use("/v1/future-message", authMiddleware, futureMessageRouter);
 router.use("/v1/daily_record", authMiddleware, dailyRouter);
 router.use("/v1/weight_height", authMiddleware, heightWeightRouter);
 router.use("/v1/symptom_record", authMiddleware, symptomRecordRouter);
+router.use("/v1/vaccine_record", authMiddleware, vaccineRecordRouter);
+router.use("/v1/vaccine_plan", authMiddleware, vaccinePlanRouter);
 
 export default router;
