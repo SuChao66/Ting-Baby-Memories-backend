@@ -36,6 +36,10 @@ export const deleteTimeLineInfoValidator = [
   query("id").isString().notEmpty().withMessage("记录id不能为空"),
 ];
 
+export const likeValidator = [
+  body("id").isString().trim().notEmpty().withMessage("记录id不能为空"),
+];
+
 export const commentValidator = [
   body("id").isString().notEmpty().withMessage("记录id不能为空"),
   body("comment.content")

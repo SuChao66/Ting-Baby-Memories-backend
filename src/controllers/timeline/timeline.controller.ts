@@ -162,6 +162,72 @@ export const publishComment = catchAsync(async (req, res) => {
   return res.json(Response.success("发表评论成功"));
 });
 
+// 点赞/取消点赞（切换状态）
+export const toggleLike = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user!.id;
+  // 获取请求参数
+  const { id } = req.body;
+  // 查询记录
+  const timeline = await Timeline.findById(id);
+  if (!timeline) {
+    return res.json(
+      Response.error(RESPONSE_CODE.NOT_FOUND, "未获取到记录信息"),
+    );
+  }
+  // 可见性校验：private 仅发布者本人可点赞
+  if (
+    timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
+    timeline.userId.toString() !== userId
+  ) {
+    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+  }
+  // 初始化点赞列表
+  timeline.likes = timeline.likes || [];
+  // 切换点赞状态
+  const index = timeline.likes.findIndex(
+    (item) => item.userId.toString() === userId,
+  );
+  if (index > -1) {
+    timeline.likes.splice(index, 1);
+  } else {
+    // 获取当前用户信息（昵称、头像）与宝宝关系，冗余存储便于列表展示
+    const user = await User.findOne(
+      { _id: userId },
+      { nickname: 1, avatarUrl: 1, _id: 0 },
+    ).lean();
+    const relation = await UserBabyRelation.findOne(
+      {
+        userId: userId.toString(),
+        babyId: timeline.babyId.toString(),
+        status: 1,
+      },
+      { relation: 1, _id: 0 },
+    ).lean();
+    timeline.likes.push({
+      userId: new mongoose.Types.ObjectId(userId),
+      createdAt: new Date(),
+      userInfo: {
+        nickname: user?.nickname ?? "",
+        avatarUrl: user?.avatarUrl ?? "",
+        releation: relation?.relation ?? "other",
+      },
+    });
+  }
+  await timeline.save();
+  // 返回最新点赞状态、数量与完整点赞列表（含用户信息）
+  return res.json(
+    Response.success(
+      {
+        liked: index === -1,
+        likeCount: timeline.likes.length,
+        likes: timeline.likes,
+      },
+      "操作成功",
+    ),
+  );
+});
+
 // 获取记录详情
 export const getTimeLineInfo = catchAsync(async (req, res) => {
   // 获取用户id

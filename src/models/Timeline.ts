@@ -15,6 +15,13 @@ interface IComment {
   userInfo: IUserInfo;
 }
 
+// 点赞
+interface ILike {
+  userId: mongoose.Types.ObjectId;
+  createdAt: Date;
+  userInfo: IUserInfo;
+}
+
 // 文件
 interface IFile {
   url: string;
@@ -27,6 +34,7 @@ export interface ITimeline extends Document {
   babyId: Schema.Types.ObjectId; // 关联宝宝
   content: string; // 内容
   comments?: Array<IComment>; // 评论
+  likes?: Array<ILike>; // 点赞
   files?: Array<IFile>; // 图片、视频、音频
   tags?: Array<string>; // 标签
   isMilestone?: boolean; // 是否里程碑事件
@@ -47,6 +55,16 @@ const timelineSchema = new Schema<ITimeline>(
           content: { type: String, required: true },
           userInfo: { type: Object },
           createdAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
+    likes: {
+      type: [
+        {
+          userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+          createdAt: { type: Date, default: Date.now },
+          userInfo: { type: Object },
         },
       ],
       default: [],
