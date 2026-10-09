@@ -1,7 +1,7 @@
 // 导入工具函数
 import { catchAsync, Response, generateInviteLinkToken } from "@/utils";
 // 导入常量
-import { RESPONSE_CODE, ONE_DAY } from "@/enums";
+import { RESPONSE_CODE, ONE_DAY, NUMBER } from "@/enums";
 // 导入模型
 import UserBabyRelation from "@/models/UserBabyRelation";
 import BabyInvite from "@/models/BabyInvite";
@@ -49,7 +49,7 @@ export const getPreviewInfo = catchAsync(async (req, res) => {
     token,
     status: 1,
     expiresAt: { $gt: new Date() },
-    usedCount: 0,
+    usedCount: NUMBER.ZERO,
   }).lean();
   if (!invite) {
     return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "邀请链接已失效"));
@@ -59,7 +59,7 @@ export const getPreviewInfo = catchAsync(async (req, res) => {
     User.findOne({ _id: invite.inviterId }, { avatarUrl: 1, _id: 0 }).lean(),
     Baby.findOne(
       { _id: invite.babyId },
-      { nickname: 1, avatarUrl: 1, _id: 0 },
+      { nickname: 1, avatarUrl: 1, _id: 1 },
     ).lean(),
     UserBabyRelation.findOne(
       {
@@ -76,10 +76,73 @@ export const getPreviewInfo = catchAsync(async (req, res) => {
       {
         inviterAvatarUrl: inviter?.avatarUrl ?? "",
         babyNickname: baby?.nickname ?? "",
+        babyId: baby?._id ?? "",
         relation: relation?.relation ?? "",
         expiresAt: invite.expiresAt,
       },
       "success",
     ),
   );
+});
+
+// 加入成长圈
+// 安全原则：babyId 以 token 反查的邀请记录为准，不信任客户端传参，防止伪造/越权加入任意成长圈
+// 并发安全：通过原子更新占用名额（usedCount 0 -> 1），同一条链接并发请求只有一个能成功
+export const joinFamily = catchAsync(async (req, res) => {
+  // 获取userId
+  const userId = req.user?.id;
+  // 获取入参（babyId 不从入参取，由邀请记录提供）
+  const { token, nickname, relation } = req.body;
+
+  // 原子校验并占用邀请：仅未作废、未过期、未被使用的链接可被接受
+  const invite = await BabyInvite.findOneAndUpdate(
+    {
+      token,
+      status: 1,
+      usedCount: NUMBER.ZERO,
+      expiresAt: { $gt: new Date() },
+    },
+    { $inc: { usedCount: NUMBER.ONE } }, // usedCount 0 -> 1 加1操作
+    { new: true }, // true 返回更新后的文档
+  ).lean();
+  if (!invite) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "邀请链接已失效"));
+  }
+
+  // 判断当前用户是否已在该宝宝成长圈
+  const babyId = invite.babyId;
+  const relationResult = await UserBabyRelation.findOne({
+    userId,
+    babyId,
+    status: 1,
+  }).lean();
+  if (relationResult) {
+    // 已加入：释放名额，链接保留给其他被邀请人使用
+    await BabyInvite.updateOne(
+      { _id: invite._id, usedCount: NUMBER.ONE },
+      { $inc: { usedCount: NUMBER.ZERO - NUMBER.ONE } }, // usedCount 1 -> 0 减1操作
+    );
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "您已加入成长圈"));
+  }
+
+  try {
+    // 更新用户信息
+    await User.updateOne({ _id: userId }, { nickname });
+    // 绑定当前用户和宝宝关系（userId+babyId 唯一索引兜底重复创建）
+    await UserBabyRelation.create({
+      userId,
+      babyId,
+      relation,
+      status: 1,
+    });
+  } catch (error) {
+    // 绑定失败：释放被占用的名额，避免邀请链接被白白作废
+    await BabyInvite.updateOne(
+      { _id: invite._id, usedCount: NUMBER.ONE },
+      { $inc: { usedCount: NUMBER.ZERO - NUMBER.ONE } }, // usedCount 1 -> 0 减1操作
+    );
+    throw error;
+  }
+
+  return res.json(Response.success(null, "success"));
 });

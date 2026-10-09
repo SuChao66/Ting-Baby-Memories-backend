@@ -36,3 +36,18 @@ export const getPreviewInfoValidator = [
     .notEmpty()
     .withMessage("token不能为空"),
 ];
+
+// 接受邀请
+export const acceptInviteValidator = [
+  body("babyId")
+    .isMongoId()
+    .withMessage("babyId格式不正确")
+    .notEmpty()
+    .withMessage("babyId不能为空"),
+  body("nickname").isString().notEmpty().withMessage("昵称不能为空"),
+  body("relation")
+    .isString()
+    .isIn(["mother", "father", "grandparent", "other"])
+    .notEmpty()
+    .withMessage("请选择与宝宝关系"),
+];

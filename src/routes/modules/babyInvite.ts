@@ -8,11 +8,13 @@ import validateMiddleware from "@/middlewares/validate.middleware";
 import {
   createInviteLinkValidator,
   getPreviewInfoValidator,
+  acceptInviteValidator,
 } from "@/validators";
 // 导入控制器模块
 import {
   createInviteLink,
   getPreviewInfo,
+  joinFamily,
 } from "@/controllers/babyInvite/babyInvite.controller";
 
 // 创建路由实例
@@ -33,6 +35,14 @@ router.get(
   getPreviewInfoValidator,
   validateMiddleware,
   getPreviewInfo,
+);
+// 加入邀请
+router.post(
+  "/accept_invite",
+  acceptInviteValidator,
+  validateMiddleware,
+  authMiddleware,
+  joinFamily,
 );
 
 export default router;
