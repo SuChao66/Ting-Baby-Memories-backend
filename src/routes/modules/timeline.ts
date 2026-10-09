@@ -8,6 +8,8 @@ import {
   getTimeLineInfo,
   deleteTimeLineInfo,
   publishComment,
+  getFileList,
+  toggleLike,
 } from "@/controllers/timeline/timeline.controller";
 // 导入校验器
 import {
@@ -17,6 +19,8 @@ import {
   getTimeLineInfoValidator,
   deleteTimeLineInfoValidator,
   commentValidator,
+  getFileListValidator,
+  likeValidator,
 } from "@/validators";
 import validateMiddleware from "@/middlewares/validate.middleware";
 
@@ -38,6 +42,8 @@ router.delete(
   validateMiddleware,
   deleteTimeLineInfo,
 );
+router.post("/like", likeValidator, validateMiddleware, toggleLike);
 router.post("/comment", commentValidator, validateMiddleware, publishComment);
+router.post("/fileList", getFileListValidator, validateMiddleware, getFileList);
 
 export default router;

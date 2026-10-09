@@ -8,9 +8,14 @@ import {
   updateBabyInfo,
   addBaby,
   deleteBaby,
+  bindBaby,
 } from "@/controllers/baby/baby.controller";
 // 引入校验规则
-import { addBabyValidator, getBabyInfoValidator } from "@/validators";
+import {
+  addBabyValidator,
+  getBabyInfoValidator,
+  bindBabyValidator,
+} from "@/validators";
 // 引入校验中间件与规则
 import validateMiddleware from "@/middlewares/validate.middleware";
 
@@ -30,5 +35,7 @@ router.get("/info", getBabyInfoValidator, validateMiddleware, getBabyInfo);
 router.post("/update", updateBabyInfo);
 // 删除宝宝档案
 router.delete("/delete", deleteBaby);
+// 关联宝宝
+router.post("/bind", bindBabyValidator, validateMiddleware, bindBaby);
 
 export default router;

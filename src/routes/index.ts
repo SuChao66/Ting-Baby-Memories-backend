@@ -6,6 +6,14 @@ import babyRouter from "@/routes/modules/baby";
 import uploadRouter from "@/routes/modules/upload";
 import timelineRouter from "@/routes/modules/timeline";
 import TagsRouter from "@/routes/modules/tags";
+import familyRouter from "@/routes/modules/family";
+import futureMessageRouter from "@/routes/modules/futureMessage";
+import dailyRouter from "@/routes/modules/dailyRecord";
+import heightWeightRouter from "@/routes/modules/heightWeight";
+import symptomRecordRouter from "@/routes/modules/symptomRecord";
+import vaccineRecordRouter from "@/routes/modules/vaccineRecord";
+import vaccinePlanRouter from "@/routes/modules/vaccinePlan";
+import babyInviteRouter from "@/routes/modules/babyInvite";
 // 引入鉴权中间件
 import authMiddleware from "@/middlewares/auth.middleware";
 
@@ -18,5 +26,13 @@ router.use("/v1/upload", authMiddleware, uploadRouter);
 router.use("/v1/baby", authMiddleware, babyRouter);
 router.use("/v1/timeline", authMiddleware, timelineRouter);
 router.use("/v1/tags", authMiddleware, TagsRouter);
+router.use("/v1/family", authMiddleware, familyRouter);
+router.use("/v1/future-message", authMiddleware, futureMessageRouter);
+router.use("/v1/daily_record", authMiddleware, dailyRouter);
+router.use("/v1/weight_height", authMiddleware, heightWeightRouter);
+router.use("/v1/symptom_record", authMiddleware, symptomRecordRouter);
+router.use("/v1/vaccine_record", authMiddleware, vaccineRecordRouter);
+router.use("/v1/vaccine_plan", authMiddleware, vaccinePlanRouter);
+router.use("/v1/invite", babyInviteRouter);
 
 export default router;

@@ -1,4 +1,5 @@
 export const NUMBER = {
+  ZERO: 0,
   ONE: 1,
   TWO: 2,
   THREE: 3,
@@ -29,3 +30,9 @@ export const NUMBER = {
   HUNDRED: 100,
   THOUSAND: 1000,
 };
+
+// 访问间隔
+export const VISIT_INTERVAL = 30 * 60 * 1000;
+
+// 一天
+export const ONE_DAY = 24 * 60 * 60 * 1000;

@@ -24,6 +24,9 @@ export const ALLOWED_CONTENT_TYPES = [
   "video/mp4",
   "video/webm",
   "video/quicktime",
+  "audio/mp3",
+  "audio/wav",
+  "audio/mpeg",
 ];
 
 // 记录权限
@@ -32,3 +35,159 @@ export const TIME_LINE_VISIBLE_ROLES = {
   FAMILY: "family", // 家庭
   PRIVATE: "private", // 私有
 };
+
+// 文件类型
+export const FILE_TYPE = {
+  IMAGE: "img",
+  VIDEO: "video",
+  AUDIO: "audio",
+};
+
+/** 吃喝拉撒睡类型 */
+export const DAILY_RECORD_TYPES = {
+  /** 喂奶 */
+  FEED: "feed",
+  /** 睡眠 */
+  SLEEP: "sleep",
+  /** 换尿布 */
+  DIAPER: "diaper",
+  /** 辅食 */
+  FOOD: "food",
+  /** 洗澡 */
+  BATH: "bath",
+  /** 玩耍 */
+  PLAY: "play",
+  /** 游泳 */
+  SWIM: "swim",
+  /** 其他事件 */
+  OTHER: "other",
+} as const;
+
+/** 尿布状态：臭臭 / 嘘嘘 / 臭臭+嘘嘘 / 干爽 */
+export const DIAPER_STATUS = {
+  POOP: "poop", // 臭臭
+  PEE: "pee", // 嘘嘘
+  BOTH: "both", // 臭臭+嘘嘘
+  DRY: "dry", // 干爽
+} as const;
+
+/** 喂奶方式 */
+export const FEED_METHOD = {
+  BREAST: "breast", // 亲喂
+  BOTTLE: "bottle", // 瓶喂
+} as const;
+
+/** 亲喂模式 */
+export const BREAST_FEED_MODE = {
+  TIMER: "timer", // 计时
+  MANUAL: "manual", // 手动输入
+} as const;
+
+/** 亲喂左右侧 */
+export const BREAST_SIDE = {
+  LEFT: "left",
+  RIGHT: "right",
+} as const;
+
+/** 瓶喂奶类型 */
+export const BOTTLE_MILK_TYPE = {
+  FORMULA: "formula", // 配方奶
+  BREAST_MILK: "breastMilk", // 母乳
+} as const;
+
+/** 臭臭颜色选项 */
+export const POOP_COLOR_OPTIONS = [
+  "yellow",
+  "yellowGreen",
+  "darkGreen",
+  "greenBrown",
+  "lightYellow",
+  "darkBrown",
+  "black",
+  "green",
+  "grayWhite",
+  "darkRed",
+  "red",
+  "pink",
+] as const;
+
+/** 臭臭形状 */
+export const POOP_SHAPE_OPTIONS = [
+  "paste",
+  "dryThick",
+  "cream",
+  "milkCurds",
+  "watery",
+  "foamy",
+  "muddy",
+  "granular",
+  "tarry",
+  "jam",
+  "tofuResidue",
+  "eggDropSoup",
+  "mucus",
+  "asphaltLike",
+  "powder",
+] as const;
+
+/** 尿量选项 */
+export const PEE_AMOUNT_OPTIONS = ["little", "medium", "much"] as const;
+
+/** 症状护理类型 */
+export const SYMPTOM_RECORD_TYPES = {
+  /** 体温 */
+  TEMPERATURE: "temperature",
+  /** 症状 */
+  SYMPTOM: "symptom",
+  /** 用药 */
+  MEDICATION: "medication",
+  /** 看医生 */
+  DOCTOR: "doctor",
+  /** 备忘 */
+  MEMO: "memo",
+} as const;
+
+/** 症状选项（按身体部位平铺，与前端 SYMPTOM_GROUPS 一致） */
+export const SYMPTOM_OPTIONS = [
+  // 头部
+  "runnyNose",
+  "cough",
+  "spitUpMilk",
+  "occipitalBaldness",
+  "teethGrinding",
+  "nosebleed",
+  "eyeDischarge",
+  "drooling",
+  "snoring",
+  "badBreath",
+  // 腹部
+  "bellyAche",
+  "diarrhea",
+  // 腰臀
+  "diaperRash",
+  "constipation",
+  "frequentUrination",
+  // 全身
+  "fever",
+  "rash",
+  "sweating",
+  "convulsion",
+  "shortStature",
+  // 其他
+  "lethargy",
+  "emotionalInstability",
+  "poorAppetite",
+  "nightCrying",
+  "drowsiness",
+] as const;
+
+/** 药品使用类型 */
+export const MEDICATION_USAGE_TYPES = {
+  /** 内服 */
+  INTERNAL: "internal",
+  /** 外用（如退烧贴） */
+  EXTERNAL: "external",
+} as const;
+
+/** 体温值范围（℃） */
+export const TEMPERATURE_RANGE = { MIN: 34, MAX: 43 } as const;

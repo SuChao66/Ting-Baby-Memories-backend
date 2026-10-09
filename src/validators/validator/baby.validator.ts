@@ -11,3 +11,9 @@ export const addBabyValidator = [
 export const getBabyInfoValidator = [
   query("id").notEmpty().withMessage("id不能为空"),
 ];
+
+// 关联宝宝规则
+export const bindBabyValidator = [
+  body("baby_no").isString().notEmpty().withMessage("请输入宝宝号"),
+  body("relation").isString().notEmpty().withMessage("请选择与宝宝关系"),
+];

@@ -36,6 +36,10 @@ export const deleteTimeLineInfoValidator = [
   query("id").isString().notEmpty().withMessage("记录id不能为空"),
 ];
 
+export const likeValidator = [
+  body("id").isString().trim().notEmpty().withMessage("记录id不能为空"),
+];
+
 export const commentValidator = [
   body("id").isString().notEmpty().withMessage("记录id不能为空"),
   body("comment.content")
@@ -48,4 +52,10 @@ export const commentValidator = [
     .trim()
     .notEmpty()
     .withMessage("评论者不能为空"),
+];
+
+export const getFileListValidator = [
+  body("babyId").isMongoId().notEmpty().withMessage("babyId不能为空"),
+  body("type").isString().notEmpty().withMessage("type不能为空"),
+  body("type").isIn(["all", "img", "video"]).withMessage("type参数不合法"),
 ];
