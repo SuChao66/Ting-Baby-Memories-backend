@@ -21,7 +21,7 @@ export const getTimeline = catchAsync(async (req, res) => {
     status: 1,
   });
   if (!relations.length) {
-    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   // 查询条件
   const query = {
@@ -144,7 +144,7 @@ export const publishComment = catchAsync(async (req, res) => {
     timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
     timeline.userId.toString() !== userId
   ) {
-    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   // 获取当前用户信息
   const userInfo = await User.findOne(
@@ -180,7 +180,7 @@ export const toggleLike = catchAsync(async (req, res) => {
     timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
     timeline.userId.toString() !== userId
   ) {
-    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   // 初始化点赞列表
   timeline.likes = timeline.likes || [];
@@ -244,7 +244,7 @@ export const getTimeLineInfo = catchAsync(async (req, res) => {
     timeline.visibleRoles === TIME_LINE_VISIBLE_ROLES.PRIVATE &&
     timeline.userId.toString() !== userId
   ) {
-    return res.json(Response.error(RESPONSE_CODE.UNAUTHORIZED, "权限不足"));
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   return res.json(Response.success(timeline, "获取成功"));
 });
@@ -337,4 +337,49 @@ export const getFileList = catchAsync(async (req, res) => {
   });
   // 返回文件列表
   return res.json(Response.success(fileMap, "获取成功"));
+});
+
+// 根据babyId获取某宝宝的全部记录
+export const getAllTimeline = catchAsync(async (req, res) => {
+  // 获取userId
+  const userId = req.user?.id;
+  // 获取请求参数
+  const { babyId } = req.body;
+  // 校验当前babyId和userId的关系，禁止越权获取
+  const relations = await UserBabyRelation.find({
+    userId,
+    babyId,
+    status: 1,
+  });
+  if (!relations.length) {
+    return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
+  }
+  // 查询条件
+  const query = {
+    babyId,
+    $or: [
+      { visibleRoles: { $in: ["public", "family"] } },
+      {
+        visibleRoles: "private",
+        userId,
+      },
+    ],
+  };
+  // 1.查 Timeline 记录（populate 拿昵称、头像）
+  const total = await Timeline.countDocuments(query as any);
+  const list = await Timeline.find(query as any)
+    .select({
+      visibleRoles: 0,
+      likes: 0,
+      comments: 0,
+      babyId: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      __v: 0,
+      userId: 0,
+    })
+    .sort({ publishTime: -1 })
+    .lean();
+  // 2.返回结果
+  res.json(Response.success({ total, data: list }, "获取成功"));
 });

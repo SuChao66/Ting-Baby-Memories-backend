@@ -59,3 +59,11 @@ export const getFileListValidator = [
   body("type").isString().notEmpty().withMessage("type不能为空"),
   body("type").isIn(["all", "img", "video"]).withMessage("type参数不合法"),
 ];
+
+export const getAllTimeLineValidator = [
+  body("babyId")
+    .isMongoId()
+    .withMessage("babyId格式不正确")
+    .notEmpty()
+    .withMessage("babyId不能为空"),
+];
