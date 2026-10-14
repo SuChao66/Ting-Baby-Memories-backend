@@ -16,7 +16,10 @@ export const addTimeLineValidator = [
   body("visibleRoles")
     .isIn(["public", "family", "private"])
     .withMessage("查看范围不合法"),
-  body("files").optional().isArray(),
+  body("files")
+    .optional()
+    .isArray({ max: 9 })
+    .withMessage("文件数量不能超过 9 个"),
   body("files.*.url").isString().notEmpty(),
   body("files.*.type").isIn(["IMAGE", "VIDEO"]),
   body("tags").optional().isArray(),

@@ -31,9 +31,10 @@ export const getPresignedUrl = catchAsync(async (req, res) => {
     return res.json(Response.error(RESPONSE_CODE.BAD_REQUEST, "不支持该类型"));
   }
 
-  // 2. 生成唯一对象 key：avatar/{username}/{filename}
+  // 2. 生成唯一对象 key：avatar/{username}/{时间戳_随机串}_{filename}，避免同名覆盖
   const username = req.user!.username;
-  const key = `avatar/${username}/${filename}`;
+  const uniquePrefix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const key = `avatar/${username}/${uniquePrefix}_${filename}`;
 
   // 3. 生成预签名上传 URL（PUT 方法，5 分钟有效期）
   // 设置 x-cos-acl: public-read，使上传后的对象可公开访问
