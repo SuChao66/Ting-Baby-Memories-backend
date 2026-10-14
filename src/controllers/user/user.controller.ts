@@ -2,8 +2,11 @@
 import { Response, catchAsync, JWT } from "@/utils";
 // 导入常量
 import { RESPONSE_CODE, NUMBER } from "@/enums";
+// 引入 mongoose 用于 ObjectId 校验
+import mongoose from "mongoose";
 // 引入用户模型
 import User from "@/models/User";
+import UserBabyRelation from "@/models/UserBabyRelation";
 // 引入配置模块
 import config from "@/config";
 
@@ -128,4 +131,24 @@ export const updateUserInfo = catchAsync(async (req, res) => {
   user.avatarUrl = avatarUrl ? avatarUrl : user.avatarUrl;
   await user.save();
   res.json(Response.success("", "用户信息更新成功"));
+});
+
+// 获取当前用户与宝宝的关系
+export const getRelationOfBaby = catchAsync(async (req, res) => {
+  // 获取用户id
+  const userId = req.user!.id;
+  // 获取babyId
+  const { babyId } = req.query;
+  // 查询当前用户与宝宝的关系
+  const relation = await UserBabyRelation.findOne({
+    userId,
+    babyId: babyId as string,
+    status: 1,
+  });
+  if (!relation) {
+    return res.json(Response.error(RESPONSE_CODE.NOT_FOUND, "关系不存在"));
+  }
+  return res.json(
+    Response.success({ relation: relation.relation }, "获取关系成功"),
+  );
 });

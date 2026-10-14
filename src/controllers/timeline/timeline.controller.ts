@@ -2,7 +2,12 @@ import mongoose from "mongoose";
 // 引入响应工具模块
 import { Response, catchAsync, formatDate } from "@/utils";
 // 导入常量
-import { RESPONSE_CODE, TIME_LINE_VISIBLE_ROLES, FILE_TYPE } from "@/enums";
+import {
+  RESPONSE_CODE,
+  TIME_LINE_VISIBLE_ROLES,
+  FILE_TYPE,
+  USER_BABY_RELATION_STATUS,
+} from "@/enums";
 // 导入模型
 import Timeline from "@/models/Timeline";
 import UserBabyRelation from "@/models/UserBabyRelation";
@@ -23,15 +28,27 @@ export const getTimeline = catchAsync(async (req, res) => {
   if (!relations.length) {
     return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
+  // 判断当前用户与宝宝是否为家庭成员（mother/father/grandparent），other 非家庭成员
+  const isFamilyMember = relations.some(
+    (r) => r.relation !== USER_BABY_RELATION_STATUS.OTHER,
+  );
   // 查询条件
   const query = {
     babyId,
     // 仅查询大事记
     ...(isMilestone ? { isMilestone: true } : {}),
     $or: [
-      { visibleRoles: { $in: ["public", "family"] } },
       {
-        visibleRoles: "private",
+        // 家庭成员可见 public/family，非家庭成员（other）仅可见 public
+        visibleRoles: {
+          $in: isFamilyMember
+            ? [TIME_LINE_VISIBLE_ROLES.PUBLIC, TIME_LINE_VISIBLE_ROLES.FAMILY]
+            : [TIME_LINE_VISIBLE_ROLES.PUBLIC],
+        },
+      },
+      {
+        // 自己发布的 private 记录始终可见
+        visibleRoles: TIME_LINE_VISIBLE_ROLES.PRIVATE,
         userId,
       },
     ],
@@ -354,13 +371,23 @@ export const getAllTimeline = catchAsync(async (req, res) => {
   if (!relations.length) {
     return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
+  // 判断当前用户与宝宝是否为家庭成员（mother/father/grandparent），other 非家庭成员
+  const isFamilyMember = relations.some(
+    (r) => r.relation !== USER_BABY_RELATION_STATUS.OTHER,
+  );
   // 查询条件
   const query = {
     babyId,
     $or: [
-      { visibleRoles: { $in: ["public", "family"] } },
       {
-        visibleRoles: "private",
+        visibleRoles: {
+          $in: isFamilyMember
+            ? [TIME_LINE_VISIBLE_ROLES.PUBLIC, TIME_LINE_VISIBLE_ROLES.FAMILY]
+            : [TIME_LINE_VISIBLE_ROLES.PUBLIC],
+        },
+      },
+      {
+        visibleRoles: TIME_LINE_VISIBLE_ROLES.PRIVATE,
         userId,
       },
     ],

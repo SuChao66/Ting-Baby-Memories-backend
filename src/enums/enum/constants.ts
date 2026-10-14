@@ -36,6 +36,14 @@ export const TIME_LINE_VISIBLE_ROLES = {
   PRIVATE: "private", // 私有
 };
 
+// 用户与宝宝关系
+export const USER_BABY_RELATION_STATUS = {
+  MOTHER: "mother", // 妈妈
+  FATHER: "father", // 爸爸
+  GRAND_PARENT: "grandparent", // 祖父、外祖父、祖母、外祖母
+  OTHER: "other", // 其他
+};
+
 // 文件类型
 export const FILE_TYPE = {
   IMAGE: "img",

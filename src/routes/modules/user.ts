@@ -8,6 +8,7 @@ import {
   changePassword,
   getUserInfo,
   updateUserInfo,
+  getRelationOfBaby,
 } from "@/controllers/user/user.controller";
 // 引入校验中间件与规则
 import validateMiddleware from "@/middlewares/validate.middleware";
@@ -18,6 +19,7 @@ import {
   loginValidator,
   registerOrForgetPasswordValidator,
   changePasswordValidator,
+  getUserAndBabyRelationValidator,
 } from "@/validators";
 
 // 创建路由实例
@@ -45,5 +47,12 @@ router.post(
 );
 router.get("/user", authMiddleware, getUserInfo);
 router.post("/update", authMiddleware, updateUserInfo);
+router.get(
+  "/relation",
+  getUserAndBabyRelationValidator,
+  validateMiddleware,
+  authMiddleware,
+  getRelationOfBaby,
+);
 
 export default router;

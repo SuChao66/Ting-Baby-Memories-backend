@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 // 导入常量
 import { PASSWORD_REGEX } from "@/enums";
 
@@ -42,4 +42,13 @@ export const changePasswordValidator = [
     .withMessage(
       "密码强度不符合要求，请包含至少6个字符，包括大小写字母、数字和特殊字符",
     ),
+];
+
+// 获取用户与宝宝的关系
+export const getUserAndBabyRelationValidator = [
+  query("babyId")
+    .notEmpty()
+    .withMessage("宝宝ID不能为空")
+    .isMongoId()
+    .withMessage("宝宝ID格式错误"),
 ];
