@@ -361,7 +361,7 @@ export const getAllTimeline = catchAsync(async (req, res) => {
   // 获取userId
   const userId = req.user?.id;
   // 获取请求参数
-  const { babyId } = req.body;
+  const { babyId, isMilestone } = req.body;
   // 校验当前babyId和userId的关系，禁止越权获取
   const relations = await UserBabyRelation.find({
     userId,
@@ -378,6 +378,8 @@ export const getAllTimeline = catchAsync(async (req, res) => {
   // 查询条件
   const query = {
     babyId,
+    // 仅查询大事记
+    ...(isMilestone ? { isMilestone: true } : {}),
     $or: [
       {
         visibleRoles: {

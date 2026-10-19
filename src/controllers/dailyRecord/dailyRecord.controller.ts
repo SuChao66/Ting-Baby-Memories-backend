@@ -2,7 +2,7 @@
 import DailyRecord from "@/models/DailyRecord";
 import UserBabyRelation from "@/models/UserBabyRelation";
 // 导入工具函数
-import { catchAsync, Response } from "@/utils";
+import { catchAsync, Response, getBeijingDayRange } from "@/utils";
 // 导入常量
 import { RESPONSE_CODE } from "@/enums";
 
@@ -22,9 +22,7 @@ export const getDailyRecordList = catchAsync(async (req, res) => {
     return res.json(Response.error(RESPONSE_CODE.FORBIDDEN, "权限不足"));
   }
   // 应用面向国内用户，统一按北京时间（UTC+8）切分一天：[date 00:00, 次日 00:00)
-  const [y, m, d] = date.split("-").map(Number);
-  const startOfDay = new Date(Date.UTC(y, m - 1, d));
-  const endOfDay = new Date(Date.UTC(y, m - 1, d + 1));
+  const { startOfDay, endOfDay } = getBeijingDayRange(date);
   // 查询记录：type 为空查全部，否则按类型筛选
   const result = await DailyRecord.find({
     babyId,

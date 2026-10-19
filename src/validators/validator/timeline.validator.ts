@@ -69,4 +69,8 @@ export const getAllTimeLineValidator = [
     .withMessage("babyId格式不正确")
     .notEmpty()
     .withMessage("babyId不能为空"),
+  body("isMilestone")
+    .optional()
+    .isBoolean()
+    .withMessage("isMilestone格式不正确"),
 ];
