@@ -11,7 +11,7 @@ dotenv.config({ path: `.env.${env}` });
 const rateLimitConfig =
   env === "production"
     ? {
-        WINDOW_MS: 15 * 60 * 1000, // 生产环境: 15 分钟窗口
+        WINDOW_MS: 60 * 1000, // 生产环境: 1 分钟窗口
         MAX: 100, // 生产环境: 每个 IP 最多 100 次请求
       }
     : {
