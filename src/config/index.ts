@@ -45,8 +45,12 @@ const config = {
   // MongoDB地址
   mongoUri:
     process.env.MONGO_URI || "mongodb://localhost:27017/ting-baby-memories",
-  // 跨域允许的来源
-  corsOrigins: process.env.CORS_ORIGINS || "http://localhost:5173",
+  // 跨域允许的来源：支持逗号分隔多个域名
+  // （cors 包会把整个字符串当单一 origin 比对，不 split 的话多域名会全部静默拒绝）
+  // 注意：不要填 "*"，credentials:true 时浏览器会拒绝通配符
+  corsOrigins: (process.env.CORS_ORIGINS || "http://localhost:5173")
+    .split(",")
+    .map((s) => s.trim()),
   // 加密密钥
   encryptSecretKey: process.env.ENCRYPT_SECRET_KEY,
   // 腾讯云 COS
