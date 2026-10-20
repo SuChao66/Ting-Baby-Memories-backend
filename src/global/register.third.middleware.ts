@@ -13,7 +13,7 @@ const registerThirdPartyMiddleware = (app: Express) => {
     cors({
       origin: config.corsOrigins,
       methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true, // 允许携带 cookie
+      credentials: true, // 允许携带 cookie, 为true时，响应头必须是具体域名
     }),
   );
   // 安全中间件, 设置响应头, 防止 XSS 攻击, SQL 注入等

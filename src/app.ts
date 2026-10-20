@@ -13,6 +13,11 @@ import routes from "@/routes";
 // 创建 express 应用实例
 const app = express();
 
+// 反代链共两层：宝塔 nginx(宿主机) → frontend 容器 nginx → backend
+// 信任两层代理，req.ip 才能穿透到 XFF 里的真实客户端 IP（容器视角 socket 恒为 frontend 容器 IP）
+// 访问路径：用户 → 宝塔 nginx(宿主机) → frontend 容器 nginx → backend 容器
+app.set("trust proxy", 2);
+
 // 注册前置中间件（cors/helmet/rateLimit/morgan）
 registerPreMiddleware(app);
 // 解析 cookie
