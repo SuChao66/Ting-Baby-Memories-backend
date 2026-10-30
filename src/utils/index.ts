@@ -8,8 +8,18 @@ import { encrypt, decrypt } from "@/utils/util/encrypt";
 import { getExt } from "@/utils/util/file";
 import { formatDate, getBeijingDayRange } from "@/utils/util/time";
 import { generateInviteLinkToken } from "@/utils/util/common";
+import {
+  chat as deepseekChat,
+  chatStream as deepseekChatStream,
+} from "@/utils/util/deepseek";
+import type { ChatMessage, ChatOptions } from "@/utils/util/deepseek";
 
 const JWT = { sign: jwtSign, verify: jwtVerify };
+
+const DeepSeek = {
+  chat: deepseekChat,
+  chatStream: deepseekChatStream,
+};
 
 export {
   Response,
@@ -24,4 +34,7 @@ export {
   formatDate,
   getBeijingDayRange,
   generateInviteLinkToken,
+  DeepSeek,
 };
+
+export type { ChatMessage, ChatOptions };

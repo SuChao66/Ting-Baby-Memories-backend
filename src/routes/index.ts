@@ -14,6 +14,7 @@ import symptomRecordRouter from "@/routes/modules/symptomRecord";
 import vaccineRecordRouter from "@/routes/modules/vaccineRecord";
 import vaccinePlanRouter from "@/routes/modules/vaccinePlan";
 import babyInviteRouter from "@/routes/modules/babyInvite";
+import aiRouter from "@/routes/modules/ai";
 // 引入鉴权中间件
 import authMiddleware from "@/middlewares/auth.middleware";
 
@@ -34,5 +35,7 @@ router.use("/v1/symptom_record", authMiddleware, symptomRecordRouter);
 router.use("/v1/vaccine_record", authMiddleware, vaccineRecordRouter);
 router.use("/v1/vaccine_plan", authMiddleware, vaccinePlanRouter);
 router.use("/v1/invite", babyInviteRouter);
+// AI 对话路由
+router.use("/v1/ai", authMiddleware, aiRouter);
 
 export default router;

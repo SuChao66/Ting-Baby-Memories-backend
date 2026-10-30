@@ -35,6 +35,17 @@ const cos = {
   cdnDomain: process.env.COS_CDN_DOMAIN || "",
 };
 
+// DeepSeek 大模型配置（OpenAI 兼容协议）
+const deepseek = {
+  apiKey: process.env.DEEPSEEK_API_KEY || "",
+  baseUrl: process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com",
+  model: process.env.DEEPSEEK_MODEL || "deepseek-flash",
+  // 单次请求超时时间（毫秒）
+  timeout: Number(process.env.DEEPSEEK_TIMEOUT) || 60 * 1000,
+  // 采样温度（0-2，越高越发散）
+  temperature: Number(process.env.DEEPSEEK_TEMPERATURE) || 0.7,
+};
+
 const config = {
   env,
   ...rateLimitConfig,
@@ -55,6 +66,8 @@ const config = {
   encryptSecretKey: process.env.ENCRYPT_SECRET_KEY,
   // 腾讯云 COS
   cos,
+  // DeepSeek 大模型
+  deepseek,
 };
 
 export default config;
