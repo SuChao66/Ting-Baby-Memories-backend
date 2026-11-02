@@ -13,6 +13,9 @@ import type {
   ChatCompletionResponse,
 } from "@/types/ai";
 
+// 转出对话类型（供 @/utils 统一导出）
+export type { ChatMessage, ChatOptions };
+
 /**
  * 构建 Chat Completions 请求地址（去除末尾斜杠，兼容带 /v1 的写法）
  * @returns URL
