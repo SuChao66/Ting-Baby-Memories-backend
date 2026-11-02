@@ -5,7 +5,7 @@ export const getTimeLineValidator = [
   body("page").notEmpty().withMessage("page不能为空"),
   body("page").isInt({ min: 1 }).toInt(),
   body("pageSize").notEmpty().withMessage("pageSize不能为空"),
-  body("pageSize").isInt({ min: 10 }).toInt(),
+  body("pageSize").isInt({ min: 5 }).toInt(),
 ];
 
 export const addTimeLineValidator = [

@@ -62,3 +62,23 @@ export const chatValidator = [
     .isLength({ max: 2000 })
     .withMessage("对话历史单条内容不能超过 2000 字"),
 ];
+
+// 获取历史记录
+export const getRecordValidator = [
+  body("page").notEmpty().withMessage("page 不能为空"),
+  body("page").isInt({ min: 1 }).toInt(),
+  body("pageSize").notEmpty().withMessage("pageSize 不能为空"),
+  body("pageSize").isInt({ min: 10 }).toInt(),
+];
+
+// 获取某个会话的问答明细规则
+export const getRecordDetailValidator = [
+  body("sessionCode")
+    .notEmpty()
+    .withMessage("sessionCode 不能为空")
+    .bail()
+    .isString()
+    .withMessage("sessionCode 必须是字符串")
+    .bail()
+    .trim(),
+];

@@ -27,3 +27,12 @@ export const formatDate = (date?: Date) => {
     seconds: today.getSeconds(),
   };
 };
+
+// 获取北京时间
+export const getBeijingTime = (date: Date) => {
+  const d = new Date(date);
+  return d.toLocaleString("zh-CN", {
+    timeZone: "Asia/Shanghai",
+    hour12: false,
+  });
+};
